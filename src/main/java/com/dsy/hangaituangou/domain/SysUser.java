@@ -8,7 +8,7 @@ import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class User extends BaseEntity {
+public class SysUser extends BaseEntity {
     private String username;      // 用户名，唯一
     private String password;      // 密码，需要加密存储
     private String email;         // 邮箱，可用于验证和找回密码
