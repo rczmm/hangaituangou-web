@@ -26,7 +26,7 @@ public class UserServiceImpl extends ServiceImpl<sysUserMapper, SysUser> impleme
     private AuthenticationManager authenticationManager;
 
     @Override
-    public Map<String, String> login(LoginBo loginBo) {
+    public String login(LoginBo loginBo) {
         // 数据封装
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginBo.getUsername(), loginBo.getPassword());
         // 调用loadUserByUsername
@@ -36,7 +36,6 @@ public class UserServiceImpl extends ServiceImpl<sysUserMapper, SysUser> impleme
         }
         Customer customer = (Customer) authentication.getPrincipal();
         SysUser sysUser = customer.getSysUser();
-        String token = "1111111111111111111111111" + sysUser.getUsername() + sysUser.getPassword();
-        return Map.of("token", token);
+        return "1111111111111111111111111" + sysUser.getUsername() + sysUser.getPassword();
     }
 }
