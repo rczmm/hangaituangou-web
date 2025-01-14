@@ -5,7 +5,7 @@ import com.dsy.hangaituangou.domain.SysUser;
 import com.dsy.hangaituangou.domain.bo.LoginBo;
 
 
-public interface sysUserService extends IService<SysUser> {
+public interface SysUserService extends IService<SysUser> {
 
     String login(LoginBo loginBo);
 

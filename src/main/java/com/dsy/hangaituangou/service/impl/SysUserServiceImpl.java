@@ -4,26 +4,22 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dsy.hangaituangou.domain.SysUser;
 import com.dsy.hangaituangou.domain.bo.LoginBo;
 import com.dsy.hangaituangou.domain.security.Customer;
-import com.dsy.hangaituangou.mapper.sysUserMapper;
-import com.dsy.hangaituangou.service.sysUserService;
-import jakarta.annotation.Resource;
+import com.dsy.hangaituangou.mapper.SysUserMapper;
+import com.dsy.hangaituangou.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Objects;
 
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl extends ServiceImpl<sysUserMapper, SysUser> implements sysUserService {
+public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
 
-
-    @Resource
-    private AuthenticationManager authenticationManager;
+    AuthenticationManager authenticationManager;
 
     @Override
     public String login(LoginBo loginBo) {
