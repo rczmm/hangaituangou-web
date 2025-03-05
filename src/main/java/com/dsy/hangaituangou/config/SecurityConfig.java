@@ -36,15 +36,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(
-                new ClearSiteDataHeaderWriter(
-                        ClearSiteDataHeaderWriter.Directive.CACHE,
-                        ClearSiteDataHeaderWriter.Directive.COOKIES,
-                        ClearSiteDataHeaderWriter.Directive.STORAGE
-                )
-        );
-
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/auth/register", "/auth/logout", "/")
@@ -52,10 +43,6 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated())
                 .authenticationManager(authenticationManager())
-                .logout((logout) -> logout
-                        .logoutUrl("/auth/logout")
-                        .logoutSuccessUrl("/")
-                        .addLogoutHandler(clearSiteData))
                 .build();
     }
 
