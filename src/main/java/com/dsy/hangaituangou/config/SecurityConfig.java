@@ -3,7 +3,6 @@ package com.dsy.hangaituangou.config;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -19,7 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Resource
-    @Lazy
     private UserDetailsService userDetailsService;
 
     @Resource
@@ -38,17 +36,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/login", "/register", "/")
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated())
-                .formLogin(
-                        form -> form.loginPage("/login")
-                                .loginProcessingUrl("/login")
-                                .usernameParameter("username")
-                                .passwordParameter("password")
-                )
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/register", "/")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .authenticationManager(authenticationManager())
                 .build();
     }
 

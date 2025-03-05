@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dsy.hangaituangou.domain.SysUser;
 import com.dsy.hangaituangou.domain.security.Customer;
 import com.dsy.hangaituangou.exception.base.BusinessException;
-import com.dsy.hangaituangou.service.SysUserService;
+import com.dsy.hangaituangou.mapper.SysUserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,11 +17,11 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final SysUserService sysUserService;
+    private final SysUserMapper sysUserService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SysUser user = sysUserService.getOne(new LambdaQueryWrapper<SysUser>()
+        SysUser user = sysUserService.selectOne(new LambdaQueryWrapper<SysUser>()
                 .eq(SysUser::getUsername, username).last("limit 1"));
 
         if (user == null) {

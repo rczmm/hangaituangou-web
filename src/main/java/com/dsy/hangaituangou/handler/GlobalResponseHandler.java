@@ -2,22 +2,28 @@ package com.dsy.hangaituangou.handler;
 
 import com.dsy.hangaituangou.annotation.NotControllerResponseAdvice;
 import com.dsy.hangaituangou.domain.vo.base.RespBase;
+import com.dsy.hangaituangou.exception.base.BusinessException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+@Slf4j
 @RestControllerAdvice(basePackages = {"com.dsy.hangaituangou.controller.*"}) // 指定需要拦截的包
 public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
 
     private final ObjectMapper objectMapper;
 
+    @Autowired
     public GlobalResponseHandler(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
@@ -29,9 +35,18 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
         return !returnType.hasMethodAnnotation(NotControllerResponseAdvice.class);
     }
 
+    // 处理认证相关异常
+    @ExceptionHandler(BusinessException.class)
+    public RespBase<String> handleAuthenticationException(BusinessException e) {
+        log.error("业务异常：", e);
+        return RespBase.fail("异常：" + e.getMessage());
+    }
+
+
+
     @Override
     @NonNull
-    public Object beforeBodyWrite(@NonNull Object body, @NonNull MethodParameter returnType, @NonNull MediaType selectedContentType,
+    public Object beforeBodyWrite(Object body, @NonNull MethodParameter returnType, @NonNull MediaType selectedContentType,
                                   @NonNull Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   @NonNull ServerHttpRequest request, @NonNull ServerHttpResponse response) {
         // 如果已经是 RespBase 类型，则直接返回
@@ -47,6 +62,8 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
                 return RespBase.fail("返回String类型数据转换json异常");
             }
         }
+
+
 
         // 封装返回结果
         return RespBase.success(body);
