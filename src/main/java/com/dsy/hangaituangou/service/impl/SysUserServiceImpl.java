@@ -42,4 +42,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         SysUser sysUser = customer.getSysUser();
         return "1111111111111111111111111" + sysUser.getUsername() + sysUser.getPassword();
     }
+
+    @Override
+    public Boolean logout() {
+        return true;
+    }
 }

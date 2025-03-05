@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,6 +21,11 @@ public class AuthController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(@RequestBody LoginBo loginBo) {
         return sysUserService.login(loginBo);
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public Boolean logout() {
+        return sysUserService.logout();
     }
 
 
