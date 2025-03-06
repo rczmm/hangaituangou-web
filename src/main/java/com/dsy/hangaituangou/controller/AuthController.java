@@ -1,6 +1,8 @@
 package com.dsy.hangaituangou.controller;
 
+import com.dsy.hangaituangou.domain.base.RespBase;
 import com.dsy.hangaituangou.domain.bo.LoginBo;
+import com.dsy.hangaituangou.domain.vo.LoginVo;
 import com.dsy.hangaituangou.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,7 +37,7 @@ public class AuthController {
         @ApiResponse(responseCode = "400", description = "用户名或密码错误")
     })
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@RequestBody LoginBo loginBo) {
+    public RespBase<LoginVo> login(@RequestBody LoginBo loginBo) {
         return sysUserService.login(loginBo);
     }
 

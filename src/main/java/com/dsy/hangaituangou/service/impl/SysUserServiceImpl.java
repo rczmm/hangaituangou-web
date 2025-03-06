@@ -2,8 +2,10 @@ package com.dsy.hangaituangou.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dsy.hangaituangou.domain.SysUser;
+import com.dsy.hangaituangou.domain.base.RespBase;
 import com.dsy.hangaituangou.domain.bo.LoginBo;
 import com.dsy.hangaituangou.domain.security.Customer;
+import com.dsy.hangaituangou.domain.vo.LoginVo;
 import com.dsy.hangaituangou.exception.base.BusinessException;
 import com.dsy.hangaituangou.mapper.SysUserMapper;
 import com.dsy.hangaituangou.service.SysUserService;
@@ -28,7 +30,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 
     @Override
-    public String login(LoginBo loginBo) {
+    public RespBase<LoginVo> login(LoginBo loginBo) {
         userDetailsService.loadUserByUsername(loginBo.getUsername());
         // 数据封装
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginBo.getUsername(), loginBo.getPassword());
@@ -37,11 +39,20 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         try {
             authentication = authenticationManager.authenticate(authenticationToken);
         } catch (Exception ex) {
-            throw new BusinessException("用户名或密码错误");
+            return RespBase.error("用户名或密码错误");
         }
         Customer customer = (Customer) authentication.getPrincipal();
         SysUser sysUser = customer.getSysUser();
-        return "1111111111111111111111111" + sysUser.getUsername() + sysUser.getPassword();
+        
+        // 构建LoginVo对象
+        LoginVo loginVo = new LoginVo();
+        loginVo.setUserId(sysUser.getId());
+        loginVo.setUsername(sysUser.getUsername());
+        loginVo.setNickname(sysUser.getNickname());
+        // TODO: 这里需要集成JWT等token生成逻辑
+        loginVo.setToken("JWT_TOKEN_" + sysUser.getUsername());
+        
+        return RespBase.success(loginVo);
     }
 
     @Override
