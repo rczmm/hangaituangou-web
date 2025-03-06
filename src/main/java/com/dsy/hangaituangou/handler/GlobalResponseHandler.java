@@ -9,13 +9,21 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice(basePackages = {"com.dsy.hangaituangou.controller.*"}) // 指定需要拦截的包
@@ -40,6 +48,18 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
     public RespBase<String> handleAuthenticationException(BusinessException e) {
         log.error("业务异常：", e);
         return RespBase.fail("异常：" + e.getMessage());
+    }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RespBase<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        BindingResult result = ex.getBindingResult();
+        List<FieldError> fieldErrors = result.getFieldErrors();
+        String errorMessage = fieldErrors.stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+        return RespBase.fail(400, errorMessage);
     }
 
 

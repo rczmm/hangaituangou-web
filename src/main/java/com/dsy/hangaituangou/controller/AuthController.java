@@ -1,5 +1,6 @@
 package com.dsy.hangaituangou.controller;
 
+import com.dsy.hangaituangou.annotation.NotControllerResponseAdvice;
 import com.dsy.hangaituangou.domain.bo.LoginBo;
 import com.dsy.hangaituangou.service.SysUserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,12 @@ public class AuthController {
     public String logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
         logoutHandler.logout(request, response, authentication);
         return "redirect:/home";
+    }
+
+    @NotControllerResponseAdvice
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String register(@Validated @RequestBody LoginBo loginBo) {
+        return sysUserService.register(loginBo);
     }
 
 

@@ -10,4 +10,7 @@ public interface SysUserService extends IService<SysUser> {
     String login(LoginBo loginBo);
 
     Boolean logout();
+
+    String register(LoginBo loginBo);
+
 }

@@ -47,4 +47,18 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public Boolean logout() {
         return true;
     }
+
+    @Override
+    public String register(LoginBo loginBo) {
+        try {
+            userDetailsService.loadUserByUsername(loginBo.getUsername());
+        } catch (BusinessException businessException) {
+            SysUser sysUser = new SysUser();
+            sysUser.setUsername(loginBo.getUsername());
+            sysUser.setPassword(loginBo.getPassword());
+            boolean save = save(sysUser);
+            return save ? "注册成功" : "注册失败";
+        }
+        return "注册失败";
+    }
 }
