@@ -31,4 +31,13 @@ public class SysUser extends BaseEntity {
     private Date lastLoginTime;   // 最后登录时间
     @Schema(description = "最后登录IP", example = "192.168.1.1")
     private String lastLoginIp;    // 最后登录ip
+    
+    @Schema(description = "租户ID")
+    private Long tenantId;        // 所属租户ID
+    
+    @Schema(description = "角色ID")
+    private Long roleId;          // 用户角色ID
+    
+    @Schema(description = "用户类型：0-HR，1-求职者", example = "0")
+    private Integer userType;     // 用户类型
 }
