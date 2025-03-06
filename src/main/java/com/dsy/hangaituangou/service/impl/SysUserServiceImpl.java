@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -48,17 +49,27 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return true;
     }
 
+    @Resource
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public String register(LoginBo loginBo) {
         try {
             userDetailsService.loadUserByUsername(loginBo.getUsername());
+            throw new BusinessException("用户名已存在");
         } catch (BusinessException businessException) {
-            SysUser sysUser = new SysUser();
-            sysUser.setUsername(loginBo.getUsername());
-            sysUser.setPassword(loginBo.getPassword());
-            boolean save = save(sysUser);
-            return save ? "注册成功" : "注册失败";
+            if ("用户名不存在！".equals(businessException.getMessage())) {
+                SysUser sysUser = new SysUser();
+                sysUser.setUsername(loginBo.getUsername());
+                sysUser.setPassword(passwordEncoder.encode(loginBo.getPassword()));
+                boolean save = save(sysUser);
+                if (save) {
+                    return "注册成功";
+                } else {
+                    throw new BusinessException("注册失败，请稍后重试");
+                }
+            }
+            throw businessException;
         }
-        return "注册失败";
     }
 }

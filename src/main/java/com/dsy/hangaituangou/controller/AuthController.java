@@ -36,7 +36,6 @@ public class AuthController {
         return "redirect:/home";
     }
 
-    @NotControllerResponseAdvice
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@Validated @RequestBody LoginBo loginBo) {
         return sysUserService.register(loginBo);
