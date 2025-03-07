@@ -93,6 +93,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
      * @return 是否成功
      */
     @Override
+
     public boolean markAllNotificationsAsRead(Long receiverId) {
         List<Notification> notifications = list(new LambdaQueryWrapper<Notification>()
                 .eq(Notification::getReceiverId, receiverId)
