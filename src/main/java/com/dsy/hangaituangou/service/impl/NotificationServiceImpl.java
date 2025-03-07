@@ -7,6 +7,7 @@ import com.dsy.hangaituangou.mapper.NotificationMapper;
 import com.dsy.hangaituangou.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
      * @return 是否成功
      */
     @Override
-
+    @Transactional
     public boolean markAllNotificationsAsRead(Long receiverId) {
         List<Notification> notifications = list(new LambdaQueryWrapper<Notification>()
                 .eq(Notification::getReceiverId, receiverId)
