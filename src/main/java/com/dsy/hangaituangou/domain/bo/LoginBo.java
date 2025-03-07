@@ -16,4 +16,9 @@ public class LoginBo {
     @NotNull(message = "密码不能为空")
     private String password;
 
+    @Schema(description = "用户类型：0-HR，1-求职者", example = "0")
+    private Integer userType;
+
+    @Schema(description = "租户ID")
+    private Long tenantId;
 }

@@ -82,7 +82,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
      */
     @Override
     public int getUnreadNotificationCount(Long receiverId) {
-        return count(new LambdaQueryWrapper<Notification>()
+        return (int) count(new LambdaQueryWrapper<Notification>()
                 .eq(Notification::getReceiverId, receiverId)
                 .eq(Notification::getStatus, 0));
     }
