@@ -44,16 +44,14 @@ public class SysUser extends BaseEntity {
     @Schema(description = "最后登录IP", example = "192.168.1.1")
     @TableField("last_login_ip")
     private String lastLoginIp;    // 最后登录ip
-    
-    @Schema(description = "租户ID")
-    @TableField("tenant_id")
-    private Long tenantId;        // 所属租户ID
-    
-    @Schema(description = "角色ID")
-    @TableField("role_id")
-    private Long roleId;          // 用户角色ID
-    
+
     @Schema(description = "用户类型：0-HR，1-求职者", example = "0")
     @TableField("user_type")
-    private Integer userType;     // 用户类型
+    private Integer userType;
+
+    @Schema(description = "角色类型")
+    @TableField("role_type")
+    private Long roleType;
+    
+    // 移除了租户ID字段
 }

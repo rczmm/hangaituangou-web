@@ -46,9 +46,7 @@ public class Notification extends BaseEntity {
     @TableField("is_top")
     private Integer isTop;
 
-    @Schema(description = "租户ID")
-    @TableField("tenant_id")
-    private Long tenantId;
+    // 移除了租户ID字段
 
     @Schema(description = "发送者ID")
     @TableField("sender_id")

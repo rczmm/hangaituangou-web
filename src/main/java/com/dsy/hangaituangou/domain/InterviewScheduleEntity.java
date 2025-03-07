@@ -42,7 +42,5 @@ public class InterviewScheduleEntity extends BaseEntity {
     @TableField("interview_type")
     private String interviewType;
     
-    @Schema(description = "租户ID")
-    @TableField("tenant_id")
-    private Long tenantId;
+    // 移除了租户ID字段
 }

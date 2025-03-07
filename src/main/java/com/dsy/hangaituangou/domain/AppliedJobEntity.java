@@ -34,7 +34,5 @@ public class AppliedJobEntity extends BaseEntity {
     @TableField("resume_id")
     private String resumeId;
     
-    @Schema(description = "租户ID")
-    @TableField("tenant_id")
-    private Long tenantId;
+    // 移除了租户ID字段
 }

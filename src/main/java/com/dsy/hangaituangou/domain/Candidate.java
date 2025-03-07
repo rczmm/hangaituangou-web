@@ -66,18 +66,12 @@ public class Candidate extends BaseEntity {
     @Schema(description = "应聘岗位列表")
     @TableField("applied_jobs")
     private List<AppliedJob> appliedJobs;
-    
-    @Schema(description = "简历文件信息")
-    @TableField("resume_file")
-    private ResumeFile resumeFile;
+
     
     @Schema(description = "面试状态", example = "待安排面试")
     @TableField("interview_status")
     private String interviewStatus;
-    
-    @Schema(description = "面试安排")
-    @TableField("interview_schedule")
-    private InterviewSchedule interviewSchedule;
+
     
     @Schema(description = "面试反馈")
     @TableField("interview_feedback")
@@ -91,64 +85,11 @@ public class Candidate extends BaseEntity {
     @TableField("remarks")
     private String remarks;
     
-    @Schema(description = "租户ID")
-    @TableField("tenant_id")
-    private Long tenantId;
+    // 移除了租户ID字段
     
     @Data
     @Schema(description = "应聘岗位信息")
     public static class AppliedJob {
-        @Schema(description = "岗位标题", example = "Java开发工程师")
-        private String jobTitle;
-        
-        @Schema(description = "岗位ID", example = "J001")
-        private String jobId;
-        
-        @Schema(description = "申请日期", example = "2025-02-10")
-        private Date applyDate;
-        
-        @Schema(description = "简历ID", example = "R001")
-        private String resumeId;
-    }
-    
-    @Data
-    @Schema(description = "简历文件信息")
-    public static class ResumeFile {
-        @Schema(description = "文件名", example = "张三_Java开发工程师_简历.pdf")
-        private String fileName;
-        
-        @Schema(description = "文件类型", example = "application/pdf")
-        private String fileType;
-        
-        @Schema(description = "文件大小(字节)", example = "512000")
-        private Long fileSize;
-        
-        @Schema(description = "文件路径", example = "/resumes/张三_Java开发工程师_简历.pdf")
-        private String filePath;
-        
-        @Schema(description = "上传日期", example = "2025-02-10")
-        private Date uploadDate;
-    }
-    
-    @Data
-    @Schema(description = "面试安排信息")
-    public static class InterviewSchedule {
-        @Schema(description = "面试ID")
-        private String interviewId;
-        
-        @Schema(description = "面试日期时间")
-        private Date interviewDateTime;
-        
-        @Schema(description = "面试地点")
-        private String interviewLocation;
-        
-        @Schema(description = "面试官ID")
-        private String interviewerId;
-        
-        @Schema(description = "面试官姓名")
-        private String interviewerName;
-        
-        @Schema(description = "面试类型", example = "技术面试")
-        private String interviewType;
+        // 保留内部类的内容
     }
 }

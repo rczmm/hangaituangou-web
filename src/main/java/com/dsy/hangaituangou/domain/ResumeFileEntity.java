@@ -38,7 +38,5 @@ public class ResumeFileEntity extends BaseEntity {
     @TableField("upload_date")
     private Date uploadDate;
     
-    @Schema(description = "租户ID")
-    @TableField("tenant_id")
-    private Long tenantId;
+    // 移除了租户ID字段
 }

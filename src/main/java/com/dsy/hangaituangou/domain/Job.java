@@ -87,9 +87,7 @@ public class Job extends BaseEntity {
     @TableField("job_tags")
     private List<String> jobTags;
 
-    @Schema(description = "租户ID")
-    @TableField("tenant_id")
-    private Long tenantId;
+    // 移除了租户ID字段
 
     @Schema(description = "发布者ID")
     @TableField("publisher_id")

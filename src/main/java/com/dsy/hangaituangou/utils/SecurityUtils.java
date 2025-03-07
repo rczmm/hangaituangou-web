@@ -28,14 +28,7 @@ public class SecurityUtils {
         return null;
     }
     
-    /**
-     * 获取当前登录用户的租户ID
-     * @return 租户ID
-     */
-    public static Long getCurrentTenantId() {
-        SysUser user = getCurrentUser();
-        return user != null ? user.getTenantId() : null;
-    }
+    // 移除了获取当前租户ID的方法
     
     /**
      * 获取当前登录用户的ID

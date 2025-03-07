@@ -77,9 +77,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 sysUser.setUserType(loginBo.getUserType());
                 // 根据用户类型设置对应的角色ID
                 // TODO: 这里需要从数据库中获取对应的角色ID
-                sysUser.setRoleId(loginBo.getUserType() == 0 ? 1L : 2L); // 假设1是HR角色，2是求职者角色
-                // 设置租户ID
-                sysUser.setTenantId(loginBo.getTenantId());
+                sysUser.setRoleType(loginBo.getUserType() == 0 ? 1L : 2L); // 假设1是HR角色，2是求职者角色
                 boolean save = save(sysUser);
                 if (save) {
                     return "注册成功";
