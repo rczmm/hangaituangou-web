@@ -9,6 +9,7 @@ import com.dsy.hangaituangou.domain.vo.LoginVo;
 import com.dsy.hangaituangou.exception.base.BusinessException;
 import com.dsy.hangaituangou.mapper.SysUserMapper;
 import com.dsy.hangaituangou.service.SysUserService;
+import com.dsy.hangaituangou.utils.JwtUtils;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,8 +50,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         loginVo.setUserId(sysUser.getId());
         loginVo.setUsername(sysUser.getUsername());
         loginVo.setNickname(sysUser.getNickname());
-        // TODO: 这里需要集成JWT等token生成逻辑
-        loginVo.setToken("JWT_TOKEN_" + sysUser.getUsername());
+        loginVo.setAvatar(sysUser.getAvatar()); // 添加头像信息
+        
+        // 使用JwtUtils生成加密的token
+        String token = JwtUtils.generateToken(sysUser, loginBo.getPassword());
+        loginVo.setToken(token);
         
         return RespBase.success(loginVo);
     }

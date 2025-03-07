@@ -18,5 +18,8 @@ public class LoginVo {
 
     @Schema(description = "昵称", example = "管理员")
     private String nickname;
+    
+    @Schema(description = "头像URL", example = "http://example.com/avatar.jpg")
+    private String avatar;
 
 }
