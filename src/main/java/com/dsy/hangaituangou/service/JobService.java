@@ -11,4 +11,7 @@ import com.dsy.hangaituangou.domain.vo.JobVO;
  */
 public interface JobService extends IService<Job> {
     Page<JobVO> listByParams(JobBO jobBO);
+
+    Object getTags();
+
 }

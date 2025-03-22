@@ -13,7 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * 岗位服务实现类
@@ -27,9 +30,13 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 
         Page<Job> jobPage = page(new Page<>(jobBO.getPageNum(), jobBO.getPageSize()),
                 new LambdaQueryWrapper<Job>()
-                        .like(Objects.nonNull(jobBO.getTitle()), Job::getTitle, jobBO.getTitle())
-                        .like(Objects.nonNull(jobBO.getCompany()), Job::getCompany, jobBO.getCompany())
-                        .like(Objects.nonNull(jobBO.getTag()), Job::getTags, jobBO.getTag()));
+                        .like(Objects.nonNull(jobBO.getKeyword()), Job::getTitle, jobBO.getKeyword())
+                        .or()
+                        .like(Objects.nonNull(jobBO.getKeyword()), Job::getCompany, jobBO.getKeyword())
+                        .or()
+                        .like(Objects.nonNull(jobBO.getKeyword()), Job::getTags, jobBO.getKeyword())
+                        .orderByDesc(Job::getCreateTime)
+        );
 
         if (jobPage != null) {
             Page<JobVO> jobVOPage = new Page<>(jobPage.getCurrent(), jobPage.getSize(), jobPage.getTotal());
@@ -58,9 +65,25 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
                     .interviewTime(job.getInterviewTime())
                     .isFavorite(job.getIsFavorite())
                     .build()).toList());
+            jobVOPage.setCurrent(jobPage.getCurrent());
+            jobVOPage.setSize(jobPage.getSize());
+            jobVOPage.setTotal(jobPage.getTotal());
             return jobVOPage;
         }
 
         throw new BusinessException("岗位列表为空！");
+    }
+
+    @Override
+    public Object getTags() {
+        Set<String> res = new HashSet<>();
+        for (Job job : list()) {
+            String tags = job.getTags();
+            Collections.addAll(res, tags.replaceAll("\\[", "")
+                    .replaceAll("]", "")
+                    .replaceAll(" ", "")
+                    .replaceAll("\"", "").split(","));
+        }
+        return res;
     }
 }

@@ -37,4 +37,16 @@ public class JobController {
     public RespBase<Page<JobVO>> listByParams(@RequestBody JobBO jobBO) {
         return RespBase.success(jobService.listByParams(jobBO));
     }
+
+    @Operation(summary = "获取所有岗位标签",description = "获取所有岗位标签")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "获取所有岗位标签成功"),
+                    @ApiResponse(responseCode = "400", description = "获取所有岗位标签失败")
+            }
+    )
+    @RequestMapping(value = "/tags", method = RequestMethod.GET)
+    public RespBase<Object> getTags() {
+        return RespBase.success(jobService.getTags());
+    }
 }

@@ -10,12 +10,6 @@ import lombok.EqualsAndHashCode;
 @Schema(description = "岗位查询参数")
 public class JobBO extends PageBase {
 
-    @Schema(description = "岗位标题", example = "Java开发工程师")
-    private String title;
-
-    @Schema(description = "公司名称", example = "字节跳动")
-    private String company;
-
-    @Schema(description = "技能标签", example = "Java")
-    private String tag;
+    @Schema(description = "搜索关键字 岗位标题,岗位标签，公司", example = "Java开发工程师")
+    private String keyword;
 }
