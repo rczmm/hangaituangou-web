@@ -88,9 +88,11 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                         // （可选）您可能希望将确认发送回发件人
                         session.sendMessage(new TextMessage("Message sent to " + recipientId));
                     } else {
+                        // 收件人不在线
                         session.sendMessage(new TextMessage("Recipient " + recipientId + " is not online."));
                     }
                 } else {
+                    // 找不到收件人
                     session.sendMessage(new TextMessage("Recipient " + recipientId + " not found."));
                 }
             } else {
