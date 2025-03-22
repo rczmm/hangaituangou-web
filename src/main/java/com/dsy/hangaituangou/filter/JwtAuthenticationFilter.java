@@ -27,14 +27,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // 定义不需要token验证的路径
     private static final List<String> PERMIT_URLS = Arrays.asList(
             "/auth/login",
-            "/auth/register",
-            "/auth/logout",
-            "/"
+            "/auth/register"
     );
 
     private boolean shouldPermit(String requestURI) {
-        return PERMIT_URLS.stream()
-                .anyMatch(requestURI::startsWith);
+        return PERMIT_URLS.contains(requestURI);
     }
 
     @Override
