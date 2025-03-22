@@ -1,8 +1,8 @@
 package com.dsy.hangaituangou.controller;
 
-import com.dsy.hangaituangou.domain.base.RespBase;
 import com.dsy.hangaituangou.domain.bo.LoginBo;
 import com.dsy.hangaituangou.domain.vo.LoginVo;
+import com.dsy.hangaituangou.domain.vo.base.RespBase;
 import com.dsy.hangaituangou.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

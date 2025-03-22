@@ -1,95 +1,145 @@
 package com.dsy.hangaituangou.domain;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.dsy.hangaituangou.domain.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
+/**
+ * 职位实体类
+ */
 @Data
-@Schema(description = "岗位实体")
-@TableName("t_job")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@TableName("job")
+@Schema(description = "职位信息")
 public class Job extends BaseEntity {
-    @Schema(description = "职位标题", example = "Java开发工程师")
-    @TableField("job_title")
-    private String jobTitle;
 
-    @Schema(description = "工作类型", example = "全职")
-    @TableField("job_type")
-    private String jobType;
+    /**
+     * final String title;
+     */
+    @TableField("title")
+    @Schema(description = "职位标题")
+    private String title;
 
-    @Schema(description = "职位描述")
-    @TableField("job_description")
-    private String jobDescription;
+    /**
+     * final String salary;
+     */
+    @TableField("salary")
+    @Schema(description = "薪资范围")
+    private String salary;
 
-    @Schema(description = "招聘人数", example = "5")
-    @TableField("recruitment_count")
-    private Integer recruitmentCount;
+    /**
+     * final String company;
+     */
+    @TableField("company")
+    @Schema(description = "公司名称")
+    private String company;
 
-    @Schema(description = "工作地点", example = "北京市海淀区")
-    @TableField("work_location")
-    private String workLocation;
+    /**
+     * final String companySize;
+     */
+    @TableField("company_size")
+    @Schema(description = "公司规模")
+    private String companySize;
 
-    @Schema(description = "薪资范围", example = "￥12,000 - ￥18,000/月")
-    @TableField("salary_range")
-    private String salaryRange;
+    /**
+     * final String companyLogo;
+     */
+    @TableField("company_logo")
+    @Schema(description = "公司Logo")
+    private String companyLogo;
 
-    @Schema(description = "福利待遇")
+    /**
+     * final List<String> tags; (存储为 JSON 字符串)
+     */
+    @TableField("tags")
+    @Schema(description = "职位标签 (JSON 格式)")
+    private String tags;
+
+    /**
+     * final String hrName;
+     */
+    @TableField("hr_name")
+    @Schema(description = "HR 姓名")
+    private String hrName;
+
+    /**
+     * final String location;
+     */
+    @TableField("location")
+    @Schema(description = "工作地点")
+    private String location;
+
+    /**
+     * final String workExperience;
+     */
+    @TableField("work_experience")
+    @Schema(description = "工作经验要求")
+    private String workExperience;
+
+    /**
+     * final String education;
+     */
+    @TableField("education")
+    @Schema(description = "学历要求")
+    private String education;
+
+    /**
+     * final List<String> benefits; (存储为 JSON 字符串)
+     */
     @TableField("benefits")
-    private List<String> benefits;
+    @Schema(description = "福利待遇 (JSON 格式)")
+    private String benefits;
 
-    @Schema(description = "学历要求", example = "本科及以上")
-    @TableField("education_requirements")
-    private String educationRequirements;
+    /**
+     * final String description;
+     */
+    @TableField("description")
+    @Schema(description = "职位描述")
+    private String description;
 
-    @Schema(description = "经验要求", example = "2年以上Java开发经验")
-    @TableField("experience_requirements")
-    private String experienceRequirements;
+    /**
+     * final List<String> requirements; (存储为 JSON 字符串)
+     */
+    @TableField("requirements")
+    @Schema(description = "职位要求 (JSON 格式)")
+    private String requirements;
 
-    @Schema(description = "技能要求")
-    @TableField("skills_requirements")
-    private List<String> skillsRequirements;
+    /**
+     * final String status;
+     */
+    @TableField("status")
+    @Schema(description = "职位状态")
+    private String status;
 
-    @Schema(description = "语言要求", example = "英语六级以上")
-    @TableField("language_requirements")
-    private String languageRequirements;
-
-    @Schema(description = "其他要求")
-    @TableField("other_requirements")
-    private String otherRequirements;
-
-    @Schema(description = "职位状态", example = "开放中")
-    @TableField("job_status")
-    private String jobStatus;
-
+    /**
+     * final String date;
+     */
+    @TableField("date")
     @Schema(description = "发布日期")
-    @TableField("post_date")
-    private Date postDate;
+    private String date;
 
-    @Schema(description = "截止日期")
-    @TableField("close_date")
-    private Date closeDate;
+    /**
+     * final DateTime? interviewTime;
+     */
+    @TableField("interview_time")
+    @Schema(description = "面试时间")
+    private LocalDateTime interviewTime;
 
-    @Schema(description = "部门", example = "技术部")
-    @TableField("department")
-    private String department;
+    /**
+     * final bool isFavorite;
+     */
+    @TableField("is_favorite")
+    @Schema(description = "是否收藏")
+    private Boolean isFavorite;
 
-    @Schema(description = "招聘来源", example = "在线招聘平台")
-    @TableField("recruitment_source")
-    private String recruitmentSource;
-
-    @Schema(description = "职位标签")
-    @TableField("job_tags")
-    private List<String> jobTags;
-
-    // 移除了租户ID字段
-
-    @Schema(description = "发布者ID")
-    @TableField("publisher_id")
-    private Long publisherId;
 }

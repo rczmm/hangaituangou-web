@@ -2,10 +2,10 @@ package com.dsy.hangaituangou.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dsy.hangaituangou.domain.SysUser;
-import com.dsy.hangaituangou.domain.base.RespBase;
 import com.dsy.hangaituangou.domain.bo.LoginBo;
 import com.dsy.hangaituangou.domain.security.Customer;
 import com.dsy.hangaituangou.domain.vo.LoginVo;
+import com.dsy.hangaituangou.domain.vo.base.RespBase;
 import com.dsy.hangaituangou.exception.base.BusinessException;
 import com.dsy.hangaituangou.mapper.SysUserMapper;
 import com.dsy.hangaituangou.service.SysUserService;
@@ -40,7 +40,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         try {
             authentication = authenticationManager.authenticate(authenticationToken);
         } catch (Exception ex) {
-            return RespBase.error("用户名或密码错误");
+            return RespBase.fail("用户名或密码错误");
         }
         Customer customer = (Customer) authentication.getPrincipal();
         SysUser sysUser = customer.getSysUser();
