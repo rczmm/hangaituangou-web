@@ -15,4 +15,5 @@ public interface SysUserService extends IService<SysUser> {
 
     String register(LoginBo loginBo);
 
+    RespBase<LoginVo> wxLogin(String code);
 }

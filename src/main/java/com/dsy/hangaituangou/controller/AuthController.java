@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,6 +40,16 @@ public class AuthController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public RespBase<LoginVo> login(@RequestBody LoginBo loginBo) {
         return sysUserService.login(loginBo);
+    }
+
+    @Operation(summary = "微信用户登录", description = "用户通过微信code登录系统")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "登录成功"),
+        @ApiResponse(responseCode = "400", description = "用户名或密码错误")
+    })
+    @RequestMapping(value = "/wxLogin", method = RequestMethod.GET)
+    public RespBase<LoginVo> wxLogin(@RequestParam String code) {
+        return sysUserService.wxLogin(code);
     }
 
     @Operation(summary = "用户登出", description = "用户退出登录状态")
