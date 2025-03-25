@@ -57,9 +57,18 @@ public class AuthController {
         @ApiResponse(responseCode = "400", description = "用户名已存在或注册失败")
     })
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@Validated @RequestBody LoginBo loginBo) {
-        return sysUserService.register(loginBo);
+    public RespBase<String> register(@Validated @RequestBody LoginBo loginBo) {
+        return RespBase.success(sysUserService.register(loginBo));
     }
 
+    @Operation(summary = "修改密码", description = "修改密码")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "修改成功"),
+        @ApiResponse(responseCode = "400", description = "修改失败")
+    })
+    @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
+    public RespBase<String> updatePassword(@Validated @RequestBody LoginBo loginBo) {
+        return RespBase.success(sysUserService.updatePassword(loginBo));
+    }
 
 }

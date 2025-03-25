@@ -31,6 +31,20 @@ public class Job extends BaseEntity {
     private String title;
 
     /**
+     * 最低薪资
+     */
+    @TableField("min_salary")
+    @Schema(description = "最低薪资")
+    private String minSalary;
+
+    /**
+     * 最高薪资
+     */
+    @TableField("max_salary")
+    @Schema(description = "最高薪资")
+    private String maxSalary;
+
+    /**
      * final String salary;
      */
     @TableField("salary")

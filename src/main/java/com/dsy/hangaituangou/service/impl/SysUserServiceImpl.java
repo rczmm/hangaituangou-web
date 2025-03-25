@@ -19,6 +19,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -44,18 +47,18 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         Customer customer = (Customer) authentication.getPrincipal();
         SysUser sysUser = customer.getSysUser();
-        
+
         // 构建LoginVo对象
         LoginVo loginVo = new LoginVo();
         loginVo.setUserId(sysUser.getId());
         loginVo.setUsername(sysUser.getUsername());
         loginVo.setNickname(sysUser.getNickname());
         loginVo.setAvatar(sysUser.getAvatar()); // 添加头像信息
-        
+
         // 使用JwtUtils生成加密的token
         String token = JwtUtils.generateToken(sysUser, loginBo.getPassword());
         loginVo.setToken(token);
-        
+
         return RespBase.success(loginVo);
     }
 
@@ -82,6 +85,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 // 根据用户类型设置对应的角色ID
                 // TODO: 这里需要从数据库中获取对应的角色ID
                 sysUser.setRoleType(loginBo.getUserType() == 0 ? 1L : 2L); // 假设1是HR角色，2是求职者角色
+                // 写入邮箱
+                sysUser.setEmail(loginBo.getEmail());
                 boolean save = save(sysUser);
                 if (save) {
                     return "注册成功";
@@ -91,5 +96,18 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             }
             throw businessException;
         }
+    }
+
+    @Override
+    public String updatePassword(LoginBo loginBo) {
+        try {
+            list().stream().filter(sysUser -> sysUser.getUsername().equals(loginBo.getUsername())).findFirst().ifPresent(sysUser -> {
+                sysUser.setPassword(passwordEncoder.encode(loginBo.getPassword()));
+                updateById(sysUser);
+            });
+        } catch (Exception e) {
+            throw new BusinessException("修改密码失败");
+        }
+        return "修改成功！";
     }
 }

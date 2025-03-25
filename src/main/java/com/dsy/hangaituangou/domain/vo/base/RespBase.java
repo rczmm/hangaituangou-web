@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
 public class RespBase<T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     public static final int SUCCESS_CODE = 200;
     public static final int FAIL_CODE = 500;
