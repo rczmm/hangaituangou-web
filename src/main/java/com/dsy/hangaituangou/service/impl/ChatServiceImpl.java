@@ -10,10 +10,14 @@ import com.dsy.hangaituangou.service.ChatService;
 import com.dsy.hangaituangou.service.ConversationService;
 import com.dsy.hangaituangou.service.SysUserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.session.SqlSessionException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -58,7 +62,9 @@ public class ChatServiceImpl implements ChatService {
                                 .map(SysUser::getAvatar)
                                 .orElse(""))
                         .lastMessage(conversations.getLastMessage())
-                        .lastMessageTime(conversations.getLastMessageAt().toString())
+                        .lastMessageTime(Optional.ofNullable(conversations.getLastMessageAt())
+                                .map(Object::toString)
+                                .orElse(null))
                         .build())
                 .toList();
 
@@ -67,12 +73,16 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Boolean create(ChatBO chatBO) {
-        return conversationService.save(Conversations.builder()
-                .conversationType("private")
-                .name(chatBO.getRecipientId())
-                .senderId(chatBO.getSenderId())
-                .recipientId(chatBO.getRecipientId())
-                .build());
+        try {
+            return conversationService.save(Conversations.builder()
+                    .conversationType("private")
+                    .name(chatBO.getReceiverId())
+                    .senderId(chatBO.getSenderId())
+                    .recipientId(chatBO.getReceiverId())
+                    .build());
+        } catch (DuplicateKeyException e) {
+            return false;
+        }
     }
 
 }

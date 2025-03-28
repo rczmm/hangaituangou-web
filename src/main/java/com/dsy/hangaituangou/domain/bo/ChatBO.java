@@ -7,6 +7,6 @@ public class ChatBO {
 
     private String senderId;
 
-    private String recipientId;
+    private String receiverId;
 
 }
