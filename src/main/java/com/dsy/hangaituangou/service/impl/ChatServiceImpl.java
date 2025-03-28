@@ -6,6 +6,7 @@ import com.dsy.hangaituangou.domain.Conversations;
 import com.dsy.hangaituangou.domain.SysUser;
 import com.dsy.hangaituangou.domain.bo.ChatBO;
 import com.dsy.hangaituangou.domain.vo.ChatVO;
+import com.dsy.hangaituangou.domain.vo.MessageVO;
 import com.dsy.hangaituangou.exception.base.BusinessException;
 import com.dsy.hangaituangou.service.ChatMessageService;
 import com.dsy.hangaituangou.service.ChatService;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,8 +68,11 @@ public class ChatServiceImpl implements ChatService {
                                 .orElse(""))
                         .lastMessage(conversations.getLastMessage())
                         .lastMessageTime(Optional.ofNullable(conversations.getLastMessageAt())
-                                .map(Object::toString)
+                                .map(object -> object.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                                 .orElse(null))
+                        .isRead(true)
+                        .senderId(conversations.getSenderId())
+                        .recipientId(conversations.getRecipientId())
                         .build())
                 .toList();
 
@@ -114,6 +119,32 @@ public class ChatServiceImpl implements ChatService {
             return conversationService.updateById(conversations);
         }
         return false;
+    }
+
+    @Override
+    public List<MessageVO> history(String sendId, String receiveId) {
+
+        return chatMessageService.list(new LambdaQueryWrapper<ChatMessage>()
+                        .eq(ChatMessage::getSenderId, sendId)
+                        .eq(ChatMessage::getRecipientId, receiveId)
+                        .or(wrapper -> wrapper.eq(ChatMessage::getSenderId, receiveId)
+                                .eq(ChatMessage::getRecipientId, sendId))
+                        .orderByDesc(ChatMessage::getSendAt))
+                .stream()
+                .map(chatMessage -> MessageVO.builder()
+                        .id(chatMessage.getId().toString())
+                        .senderId(chatMessage.getSenderId())
+                        .senderName(sysUserService.getById(chatMessage.getSenderId()).getNickname())
+                        .text(chatMessage.getContent())
+                        .timestamp(chatMessage.getSendAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        .isMe(chatMessage.getSenderId().equals(sendId))
+                        .avatarUrl(sysUserService.getById(chatMessage.getSenderId()).getAvatar())
+                        .isFile(false)
+                        .fileName(null)
+                        .fileUrl(null)
+                        .build())
+                .toList();
+
     }
 
 }

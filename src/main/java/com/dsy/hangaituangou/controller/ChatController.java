@@ -2,6 +2,7 @@ package com.dsy.hangaituangou.controller;
 
 import com.dsy.hangaituangou.domain.bo.ChatBO;
 import com.dsy.hangaituangou.domain.vo.ChatVO;
+import com.dsy.hangaituangou.domain.vo.MessageVO;
 import com.dsy.hangaituangou.domain.vo.base.RespBase;
 import com.dsy.hangaituangou.service.ChatService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,5 +47,15 @@ public class ChatController {
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public RespBase<Boolean> create(@RequestBody ChatBO chatBO) {
         return RespBase.success(chatService.create(chatBO));
+    }
+
+    @Operation(summary = "查询历史消息", description = "查询历史消息")
+    @ApiResponses(value = {
+            @ApiResponse(description = "查询历史消息成功", responseCode = "200"),
+            @ApiResponse(description = "查询历史消息失败", responseCode = "400")}
+    )
+    @RequestMapping(value = "/history", method = RequestMethod.GET)
+    public RespBase<List<MessageVO>> history(@RequestParam String sendId, @RequestParam String receiveId) {
+        return RespBase.success(chatService.history(sendId, receiveId));
     }
 }

@@ -28,4 +28,13 @@ public class ChatVO {
     @Schema(description = "最后一条消息时间")
     private String lastMessageTime;
 
+    @Schema(description = "是否已读")
+    private boolean isRead;
+
+    @Schema(description = "发送者ID")
+    private String senderId;
+
+    @Schema(description = "接收者ID")
+    private String recipientId;
+
 }

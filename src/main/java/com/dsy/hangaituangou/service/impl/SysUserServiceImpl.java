@@ -110,4 +110,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         return "修改成功！";
     }
+
+    @Override
+    public String getNameById(String userId) {
+        return getById(userId).getNickname();
+    }
 }

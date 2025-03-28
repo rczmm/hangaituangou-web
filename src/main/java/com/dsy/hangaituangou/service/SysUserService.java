@@ -16,4 +16,6 @@ public interface SysUserService extends IService<SysUser> {
     String register(LoginBo loginBo);
 
     String updatePassword(LoginBo loginBo);
+
+    String getNameById(String userId);
 }
