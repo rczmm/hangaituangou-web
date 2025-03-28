@@ -5,6 +5,7 @@ import com.dsy.hangaituangou.domain.SysUser;
 import com.dsy.hangaituangou.domain.bo.LoginBo;
 import com.dsy.hangaituangou.domain.security.Customer;
 import com.dsy.hangaituangou.domain.vo.LoginVo;
+import com.dsy.hangaituangou.domain.vo.ProfileVO;
 import com.dsy.hangaituangou.domain.vo.base.RespBase;
 import com.dsy.hangaituangou.exception.base.BusinessException;
 import com.dsy.hangaituangou.mapper.SysUserMapper;
@@ -19,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -114,5 +116,18 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public String getNameById(String userId) {
         return getById(userId).getNickname();
+    }
+
+    @Override
+    public ProfileVO profile() {
+        ProfileVO profileVO = new ProfileVO();
+        profileVO.setId("123456");
+        profileVO.setName("陈二");
+        profileVO.setAvatarUrl("https://example.com/path/to/avatar.jpg");
+        profileVO.setEmail("chen.er@example.com");
+        profileVO.setPhone("13812345678");
+        profileVO.setAccountStatus("active");
+        profileVO.setStats(new ArrayList<>());
+        return profileVO;
     }
 }
