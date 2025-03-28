@@ -10,4 +10,5 @@ public interface ChatService {
 
     Boolean create(ChatBO chatBO);
 
+    Boolean saveMessage(String senderId, String recipientId, String text);
 }

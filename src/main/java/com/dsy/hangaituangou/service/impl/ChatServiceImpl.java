@@ -1,21 +1,22 @@
 package com.dsy.hangaituangou.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.dsy.hangaituangou.domain.ChatMessage;
 import com.dsy.hangaituangou.domain.Conversations;
 import com.dsy.hangaituangou.domain.SysUser;
 import com.dsy.hangaituangou.domain.bo.ChatBO;
 import com.dsy.hangaituangou.domain.vo.ChatVO;
 import com.dsy.hangaituangou.exception.base.BusinessException;
+import com.dsy.hangaituangou.service.ChatMessageService;
 import com.dsy.hangaituangou.service.ChatService;
 import com.dsy.hangaituangou.service.ConversationService;
 import com.dsy.hangaituangou.service.SysUserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.session.SqlSessionException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,8 @@ public class ChatServiceImpl implements ChatService {
     private final ConversationService conversationService;
 
     private final SysUserService sysUserService;
+
+    private final ChatMessageService chatMessageService;
 
 
     @Override
@@ -83,6 +86,34 @@ public class ChatServiceImpl implements ChatService {
         } catch (DuplicateKeyException e) {
             return false;
         }
+    }
+
+    @Override
+    public Boolean saveMessage(String senderId, String recipientId, String text) {
+        Conversations conversations = conversationService.list(
+                new LambdaQueryWrapper<Conversations>()
+                        .eq(Conversations::getSenderId, senderId)
+                        .eq(Conversations::getRecipientId, recipientId)
+                        .or()
+                        .eq(Conversations::getSenderId, recipientId)
+                        .eq(Conversations::getRecipientId, senderId)
+                        .last("limit 1")).stream().findFirst().orElseThrow(() -> new BusinessException("会话不存在"));
+
+        ChatMessage chatMessage = ChatMessage.builder()
+                .conversationId(conversations.getId().toString())
+                .senderId(senderId)
+                .recipientId(recipientId)
+                .messageType("text")
+                .content(text)
+                .status("sent")
+                .sendAt(LocalDateTime.now())
+                .build();
+        if (chatMessageService.save(chatMessage)) {
+            conversations.setLastMessage(text);
+            conversations.setLastMessageAt(chatMessage.getSendAt());
+            return conversationService.updateById(conversations);
+        }
+        return false;
     }
 
 }
