@@ -58,6 +58,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
                                 .companySize(job.getCompanySize())
                                 .companyLogo(job.getCompanyLogo())
                                 .tags(tags)
+                                .hrUserId(job.getHrUserId())
                                 .hrName(job.getHrName())
                                 .location(job.getLocation())
                                 .workExperience(job.getWorkExperience())

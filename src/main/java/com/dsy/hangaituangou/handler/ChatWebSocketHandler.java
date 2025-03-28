@@ -17,30 +17,21 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
-    private final Map<String, String> userSessions = new ConcurrentHashMap<>(); // Map userId to sessionId
+    private final Map<String, String> userSessions = new ConcurrentHashMap<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         String userId = getUserIdFromSession(session); // Implement this method
         if (userId != null) {
-            System.out.println("User connected: " + userId + ", Session ID: " + session.getId());
             sessions.put(session.getId(), session);
             userSessions.put(userId, session.getId());
-            // Optionally, notify other online users about this user's presence
         } else {
-            System.out.println("Anonymous client connected: " + session.getId());
-            sessions.put(session.getId(), session); // Still track anonymous sessions if needed
+            sessions.put(session.getId(), session);
         }
     }
 
     private String getUserIdFromSession(WebSocketSession session) {
-        // In a real application, you would likely retrieve the user ID from:
-        // 1. A query parameter in the WebSocket URL (e.g., ws://localhost:8080/chat?userId=someUser)
-        // 2. An attribute in the HTTP session (if using HttpSessionHandshakeInterceptor)
-        // 3. A token passed during the handshake
-
-        // For this example, let's assume the userId is passed as a query parameter
         return Objects.requireNonNull(session.getUri()).getQuery().split("=")[1];
     }
 
@@ -55,10 +46,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             }
         }
         if (userIdToRemove != null) {
-            System.out.println("User disconnected: " + userIdToRemove + ", Session ID: " + sessionId + " with status: " + status);
             userSessions.remove(userIdToRemove);
-        } else {
-            System.out.println("Anonymous client disconnected: " + sessionId + " with status: " + status);
         }
         sessions.remove(sessionId);
     }
@@ -66,7 +54,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
-        System.out.println("Received message from client " + session.getId() + ": " + payload);
 
         try {
             JsonNode jsonNode = objectMapper.readTree(payload);
@@ -85,14 +72,11 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                                 "text", text + "回复"
                         ));
                         recipientSession.sendMessage(new TextMessage(messageToSend));
-                        // （可选）您可能希望将确认发送回发件人
                         session.sendMessage(new TextMessage("Message sent to " + recipientId));
                     } else {
-                        // 收件人不在线
                         session.sendMessage(new TextMessage("Recipient " + recipientId + " is not online."));
                     }
                 } else {
-                    // 找不到收件人
                     session.sendMessage(new TextMessage("Recipient " + recipientId + " not found."));
                 }
             } else {
@@ -100,7 +84,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             }
 
         } catch (IOException e) {
-            System.err.println("Failed to parse message payload: " + e.getMessage());
             session.sendMessage(new TextMessage("Invalid message format."));
         }
     }

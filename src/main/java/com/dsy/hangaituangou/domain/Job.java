@@ -79,6 +79,11 @@ public class Job extends BaseEntity {
     @Schema(description = "职位标签 (JSON 格式)")
     private String tags;
 
+
+    @TableField("hr_user_id")
+    @Schema(description = "HR 用户 ID")
+    private String hrUserId;
+
     /**
      * final String hrName;
      */

@@ -38,6 +38,9 @@ public class JobVO {
     @Schema(description = "岗位标签", example = "[\"Java\", \"Spring Boot\", \"MySQL\"]")
     private List<String> tags;
 
+    @Schema(description = "HR ID", example = "1001")
+    private String hrUserId;
+
     @Schema(description = "HR 姓名", example = "张三")
     private String hrName;
 

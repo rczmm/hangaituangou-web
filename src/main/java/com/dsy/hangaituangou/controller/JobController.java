@@ -38,7 +38,7 @@ public class JobController {
         return RespBase.success(jobService.listByParams(jobBO));
     }
 
-    @Operation(summary = "获取所有岗位标签",description = "获取所有岗位标签")
+    @Operation(summary = "获取所有岗位标签", description = "获取所有岗位标签")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "获取所有岗位标签成功"),

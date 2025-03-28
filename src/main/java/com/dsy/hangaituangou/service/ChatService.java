@@ -1,0 +1,13 @@
+package com.dsy.hangaituangou.service;
+
+import com.dsy.hangaituangou.domain.bo.ChatBO;
+import com.dsy.hangaituangou.domain.vo.ChatVO;
+
+import java.util.List;
+
+public interface ChatService {
+    List<ChatVO> list(String userId);
+
+    Boolean create(ChatBO chatBO);
+
+}
