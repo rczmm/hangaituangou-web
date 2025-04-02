@@ -2,6 +2,7 @@ package com.dsy.hangaituangou.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.dsy.hangaituangou.domain.base.BaseEntity;
+import com.dsy.hangaituangou.enums.JobStatusEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -138,7 +139,8 @@ public class Job extends BaseEntity {
      */
     @TableField("status")
     @Schema(description = "职位状态")
-    private String status;
+    @EnumValue
+    private JobStatusEnum status;
 
     /**
      * final String date;
@@ -160,5 +162,19 @@ public class Job extends BaseEntity {
     @TableField("is_favorite")
     @Schema(description = "是否收藏")
     private Boolean isFavorite;
+
+    /**
+     * 岗位类别
+     */
+    @TableField("category")
+    @Schema(description = "岗位类别")
+    private String category;
+
+    /**
+     * 招聘人数
+     */
+    @TableField("recruitment_count")
+    @Schema(description = "招聘人数")
+    private Integer count;
 
 }

@@ -3,6 +3,7 @@ package com.dsy.hangaituangou.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dsy.hangaituangou.domain.Job;
+import com.dsy.hangaituangou.domain.bo.JobAddBO;
 import com.dsy.hangaituangou.domain.bo.JobBO;
 import com.dsy.hangaituangou.domain.vo.JobVO;
 
@@ -13,5 +14,9 @@ public interface JobService extends IService<Job> {
     Page<JobVO> listByParams(JobBO jobBO);
 
     Object getTags();
+
+    Boolean add(JobAddBO jobAddBO);
+
+    Boolean edit(JobAddBO jobAddBO);
 
 }

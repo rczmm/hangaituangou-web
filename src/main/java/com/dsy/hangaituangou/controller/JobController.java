@@ -1,6 +1,7 @@
 package com.dsy.hangaituangou.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.dsy.hangaituangou.domain.bo.JobAddBO;
 import com.dsy.hangaituangou.domain.bo.JobBO;
 import com.dsy.hangaituangou.domain.vo.JobVO;
 import com.dsy.hangaituangou.domain.vo.base.RespBase;
@@ -48,5 +49,29 @@ public class JobController {
     @RequestMapping(value = "/tags", method = RequestMethod.GET)
     public RespBase<Object> getTags() {
         return RespBase.success(jobService.getTags());
+    }
+
+    @Operation(summary = "新增岗位", description = "新增岗位")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "新增岗位成功"),
+                    @ApiResponse(responseCode = "400", description = "新增岗位失败")
+            }
+    )
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public RespBase<Boolean> add(@RequestBody JobAddBO jobAddBO) {
+        return RespBase.success(jobService.add(jobAddBO));
+    }
+
+    @Operation(summary = "修改岗位", description = "修改岗位")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "修改岗位成功"),
+                    @ApiResponse(responseCode = "400", description = "修改岗位失败")
+            }
+    )
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public RespBase<Boolean> edit(@RequestBody JobAddBO jobAddBO) {
+        return RespBase.success(jobService.edit(jobAddBO));
     }
 }

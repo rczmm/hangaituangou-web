@@ -75,4 +75,10 @@ public class JobVO {
     @Schema(description = "是否收藏", example = "false")
     private Boolean isFavorite;
 
+    @Schema(description = "岗位类别", example = "全职")
+    private String category;
+
+    @Schema(description = "招聘人数", example = "10")
+    private Integer count;
+
 }

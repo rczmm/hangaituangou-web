@@ -19,4 +19,19 @@ public class JobBO extends PageBase {
     @Schema(description = "标签，推荐 最新 附近", example = "recommended")
     private String tag;
 
+    @Schema(description = "职位名称", example = "高级软件工程师")
+    private String title;
+
+    @Schema(description = "最低薪资", example = "20k")
+    private String minSalary;
+
+    @Schema(description = "最高薪资", example = "35k")
+    private String maxSalary;
+
+    @Schema(description = "职位类型", example = "全职")
+    private String category;
+
+    @Schema(description = "工作地点", example = "成都")
+    private String location;
+
 }

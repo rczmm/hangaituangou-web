@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dsy.hangaituangou.domain.Job;
+import com.dsy.hangaituangou.domain.bo.JobAddBO;
 import com.dsy.hangaituangou.domain.bo.JobBO;
 import com.dsy.hangaituangou.domain.vo.JobVO;
+import com.dsy.hangaituangou.enums.JobStatusEnum;
 import com.dsy.hangaituangou.exception.base.BusinessException;
 import com.dsy.hangaituangou.mapper.JobMapper;
 import com.dsy.hangaituangou.service.JobService;
@@ -42,6 +44,11 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
                                 .like(Objects.nonNull(jobBO.getKeyword()), Job::getCompany, jobBO.getKeyword())
                                 .or()
                                 .like(Objects.nonNull(jobBO.getKeyword()), Job::getTags, jobBO.getKeyword()))
+                        .like(Objects.nonNull(jobBO.getTitle()), Job::getTitle, jobBO.getTitle())
+                        .like(Objects.nonNull(jobBO.getLocation()), Job::getLocation, jobBO.getLocation())
+                        .eq(Objects.nonNull(jobBO.getMinSalary()), Job::getMinSalary, jobBO.getMinSalary())
+                        .eq(Objects.nonNull(jobBO.getMaxSalary()), Job::getMaxSalary, jobBO.getMaxSalary())
+                        .eq(Objects.nonNull(jobBO.getCategory()), Job::getCategory, jobBO.getCategory())
                         .orderByDesc(Job::getCreateTime)
         );
 
@@ -74,10 +81,12 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
                                         .replaceAll("]", "")
                                         .replaceAll(" ", "")
                                         .replaceAll("\"", "").split(",")).toList())
-                                .status(job.getStatus())
+                                .status(job.getStatus().getDesc())
                                 .date(job.getDate())
                                 .interviewTime(job.getInterviewTime())
                                 .isFavorite(job.getIsFavorite())
+                                .category(job.getCategory())
+                                .count(job.getCount())
                                 .build();
                     }
             ).toList());
@@ -100,4 +109,50 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
         }
         return res;
     }
-}
+
+     @Override
+     public Boolean add(JobAddBO jobAddBO) {
+         return save(Job.builder()
+                 .title(jobAddBO.getTitle())
+                 .minSalary(jobAddBO.getMinSalary())
+                 .maxSalary(jobAddBO.getMaxSalary())
+                 .salary(jobAddBO.getSalary())
+                 .tags(gson.toJson(jobAddBO.getTags()))
+                 .hrUserId(jobAddBO.getHrUserId())
+                 .location(jobAddBO.getLocation())
+                 .workExperience(jobAddBO.getWorkExperience())
+                 .education(jobAddBO.getEducation())
+                 .benefits(gson.toJson(jobAddBO.getBenefits()))
+                 .description(jobAddBO.getDescription())
+                 .requirements(gson.toJson(jobAddBO.getRequirements()))
+                 .date(jobAddBO.getDate())
+                 .status(JobStatusEnum.OPEN)
+                 .count(jobAddBO.getCount())
+                 .build()
+         );
+     }
+
+     @Override
+     public Boolean edit(JobAddBO jobAddBO) {
+
+        Job job = getById(jobAddBO.getId());
+        if (job == null) {
+            return false;
+        }
+        job.setTitle(jobAddBO.getTitle());
+        job.setMinSalary(jobAddBO.getMinSalary());
+        job.setMaxSalary(jobAddBO.getMaxSalary());
+        job.setSalary(jobAddBO.getSalary());
+        job.setTags(gson.toJson(jobAddBO.getTags()));
+        job.setLocation(jobAddBO.getLocation());
+        job.setWorkExperience(jobAddBO.getWorkExperience());
+        job.setEducation(jobAddBO.getEducation());
+        job.setBenefits(gson.toJson(jobAddBO.getBenefits()));
+        job.setDescription(jobAddBO.getDescription());
+        job.setRequirements(gson.toJson(jobAddBO.getRequirements()));
+        job.setDate(jobAddBO.getDate());
+        job.setCategory(jobAddBO.getCategory());
+        job.setCount(jobAddBO.getCount());
+        return updateById(job);
+     }
+ }
