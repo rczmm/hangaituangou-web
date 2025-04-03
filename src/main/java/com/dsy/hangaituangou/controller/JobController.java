@@ -1,10 +1,13 @@
 package com.dsy.hangaituangou.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.dsy.hangaituangou.domain.Job;
+import com.dsy.hangaituangou.domain.bo.IdsBO;
 import com.dsy.hangaituangou.domain.bo.JobAddBO;
 import com.dsy.hangaituangou.domain.bo.JobBO;
 import com.dsy.hangaituangou.domain.vo.JobVO;
 import com.dsy.hangaituangou.domain.vo.base.RespBase;
+import com.dsy.hangaituangou.enums.JobStatusEnum;
 import com.dsy.hangaituangou.service.JobService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -73,5 +76,34 @@ public class JobController {
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public RespBase<Boolean> edit(@RequestBody JobAddBO jobAddBO) {
         return RespBase.success(jobService.edit(jobAddBO));
+    }
+
+    @Operation(summary = "删除岗位", description = "删除岗位")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "删除岗位成功"),
+                    @ApiResponse(responseCode = "400", description = "删除岗位失败")
+            }
+    )
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public RespBase<Boolean> delete(@RequestBody IdsBO idsBO) {
+        return RespBase.success(jobService.removeByIds(idsBO.getIds()));
+    }
+
+    @Operation(summary = "停用岗位", description = "停用岗位")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "停用岗位成功"),
+                    @ApiResponse(responseCode = "400", description = "停用岗位失败")
+            }
+    )
+    @RequestMapping(value = "/disable", method = RequestMethod.POST)
+    public RespBase<Boolean> disable(@RequestBody IdsBO idsBO) {
+        return RespBase.success(jobService.updateBatchById(idsBO.getIds().stream().map(id -> {
+            Job job = new Job();
+            job.setId(Long.valueOf(id));
+            job.setStatus(JobStatusEnum.CLOSE);
+            return job;
+        }).toList()));
     }
 }
