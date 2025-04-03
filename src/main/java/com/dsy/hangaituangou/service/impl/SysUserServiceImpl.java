@@ -1,6 +1,7 @@
 package com.dsy.hangaituangou.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dsy.hangaituangou.domain.Company;
 import com.dsy.hangaituangou.domain.SysUser;
 import com.dsy.hangaituangou.domain.bo.LoginBo;
 import com.dsy.hangaituangou.domain.security.Customer;
@@ -8,6 +9,7 @@ import com.dsy.hangaituangou.domain.vo.LoginVo;
 import com.dsy.hangaituangou.domain.vo.ProfileVO;
 import com.dsy.hangaituangou.domain.vo.base.RespBase;
 import com.dsy.hangaituangou.exception.base.BusinessException;
+import com.dsy.hangaituangou.mapper.CompanyMapper;
 import com.dsy.hangaituangou.mapper.SysUserMapper;
 import com.dsy.hangaituangou.service.SysUserService;
 import com.dsy.hangaituangou.utils.JwtUtils;
@@ -21,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -31,6 +35,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private AuthenticationManager authenticationManager;
 
     private final UserDetailsService userDetailsService;
+
+    private final CompanyMapper companyMapper;
 
 
     @Override
@@ -80,6 +86,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 SysUser sysUser = new SysUser();
                 sysUser.setUsername(loginBo.getUsername());
                 sysUser.setPassword(passwordEncoder.encode(loginBo.getPassword()));
+                sysUser.setCompanyId(loginBo.getCompanyId());
                 // 设置用户类型（HR或求职者）
                 sysUser.setUserType(loginBo.getUserType());
                 // 根据用户类型设置对应的角色ID
@@ -127,5 +134,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         profileVO.setAccountStatus("active");
         profileVO.setStats(new ArrayList<>());
         return profileVO;
+    }
+
+    @Override
+    public List<Map<String, Object>> getCompanyList() {
+        List<Company> companyList = companyMapper.selectList(null);
+        return companyList.stream().map(company -> Map.<String, Object>of(
+                "companyId", company.getId(),
+                "companyName", company.getName()
+        )).toList();
     }
 }

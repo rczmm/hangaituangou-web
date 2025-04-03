@@ -21,4 +21,7 @@ public class LoginBo {
 
     @Schema(description = "邮箱", example = "231908453@qq.com")
     private String email;
+
+    @Schema(description = "公司代码", example = "1")
+    private String companyId;
 }

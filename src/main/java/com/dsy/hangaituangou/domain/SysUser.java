@@ -52,6 +52,8 @@ public class SysUser extends BaseEntity {
     @Schema(description = "角色类型")
     @TableField("role_type")
     private Long roleType;
-    
-    // 移除了租户ID字段
+
+    @Schema(description = "公司ID")
+    @TableField("company_id")
+    private String companyId;
 }

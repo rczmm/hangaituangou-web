@@ -7,6 +7,9 @@ import com.dsy.hangaituangou.domain.vo.LoginVo;
 import com.dsy.hangaituangou.domain.vo.ProfileVO;
 import com.dsy.hangaituangou.domain.vo.base.RespBase;
 
+import java.util.List;
+import java.util.Map;
+
 
 public interface SysUserService extends IService<SysUser> {
 
@@ -21,5 +24,7 @@ public interface SysUserService extends IService<SysUser> {
     String getNameById(String userId);
 
     ProfileVO profile();
+
+    List<Map<String, Object>> getCompanyList();
 
 }

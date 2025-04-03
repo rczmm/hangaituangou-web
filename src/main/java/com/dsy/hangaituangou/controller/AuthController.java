@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/auth")
@@ -33,8 +36,8 @@ public class AuthController {
 
     @Operation(summary = "用户登录", description = "用户通过用户名和密码登录系统")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "登录成功"),
-        @ApiResponse(responseCode = "400", description = "用户名或密码错误")
+            @ApiResponse(responseCode = "200", description = "登录成功"),
+            @ApiResponse(responseCode = "400", description = "用户名或密码错误")
     })
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public RespBase<LoginVo> login(@RequestBody LoginBo loginBo) {
@@ -43,7 +46,7 @@ public class AuthController {
 
     @Operation(summary = "用户登出", description = "用户退出登录状态")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "登出成功")
+            @ApiResponse(responseCode = "200", description = "登出成功")
     })
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public String logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
@@ -51,10 +54,20 @@ public class AuthController {
         return "redirect:/home";
     }
 
+    @Operation(summary = "获取公司列表", description = "获取公司列表")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "获取公司列表成功"),
+            @ApiResponse(responseCode = "400", description = "获取公司列表失败")
+    })
+    @RequestMapping(value = "/getCompanyList", method = RequestMethod.GET)
+    public RespBase<List<Map<String, Object>>> getCompanyList() {
+        return RespBase.success(sysUserService.getCompanyList());
+    }
+
     @Operation(summary = "用户注册", description = "新用户注册账号")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "注册成功"),
-        @ApiResponse(responseCode = "400", description = "用户名已存在或注册失败")
+            @ApiResponse(responseCode = "200", description = "注册成功"),
+            @ApiResponse(responseCode = "400", description = "用户名已存在或注册失败")
     })
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public RespBase<String> register(@Validated @RequestBody LoginBo loginBo) {
@@ -63,8 +76,8 @@ public class AuthController {
 
     @Operation(summary = "修改密码", description = "修改密码")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "修改成功"),
-        @ApiResponse(responseCode = "400", description = "修改失败")
+            @ApiResponse(responseCode = "200", description = "修改成功"),
+            @ApiResponse(responseCode = "400", description = "修改失败")
     })
     @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
     public RespBase<String> updatePassword(@Validated @RequestBody LoginBo loginBo) {
