@@ -15,4 +15,5 @@ public interface ChatService {
 
     List<MessageVO> history(String sendId, String receiveId);
 
+    List<MessageVO> historyByChatId(String chatId);
 }

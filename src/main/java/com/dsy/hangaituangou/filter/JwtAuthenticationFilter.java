@@ -79,13 +79,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            // 从token中获取用户名
-            String username = JwtUtils.getUsernameFromToken(token);
+            // 从token中获取用户id
+            Long userId = JwtUtils.getUserIdFromToken(token);
 
             // 创建认证对象并设置到SecurityContext
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(
-                            username,
+                            userId,
                             null,
                             Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
                     );

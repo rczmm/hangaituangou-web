@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/chat")
+@RequestMapping("chat")
 @RequiredArgsConstructor
 @Tag(name = "会话管理", description = "会话接口")
 public class ChatController {
@@ -34,7 +34,7 @@ public class ChatController {
             @ApiResponse(description = "查询会话列表成功", responseCode = "200"),
             @ApiResponse(description = "查询会话列表失败", responseCode = "400")}
     )
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping(value = "list", method = RequestMethod.GET)
     public RespBase<List<ChatVO>> list(@RequestParam String userId) {
         return RespBase.success(chatService.list(userId));
     }
@@ -49,7 +49,7 @@ public class ChatController {
         return RespBase.success(chatService.create(chatBO));
     }
 
-    @Operation(summary = "查询历史消息", description = "查询历史消息")
+    @Operation(summary = "查询历史消息", description = "根据双方的id查询历史消息")
     @ApiResponses(value = {
             @ApiResponse(description = "查询历史消息成功", responseCode = "200"),
             @ApiResponse(description = "查询历史消息失败", responseCode = "400")}
@@ -57,5 +57,15 @@ public class ChatController {
     @RequestMapping(value = "/history", method = RequestMethod.GET)
     public RespBase<List<MessageVO>> history(@RequestParam String sendId, @RequestParam String receiveId) {
         return RespBase.success(chatService.history(sendId, receiveId));
+    }
+
+    @Operation(summary = "根据会话id查询历史消息", description = "根据会话id查询历史消息")
+    @ApiResponses(value = {
+            @ApiResponse(description = "查询历史消息成功", responseCode = "200"),
+            @ApiResponse(description = "查询历史消息失败", responseCode = "400")}
+    )
+    @RequestMapping(value = "/historyByChatId", method = RequestMethod.GET)
+    public RespBase<List<MessageVO>> historyByChatId(@RequestParam String chatId) {
+        return RespBase.success(chatService.historyByChatId(chatId));
     }
 }

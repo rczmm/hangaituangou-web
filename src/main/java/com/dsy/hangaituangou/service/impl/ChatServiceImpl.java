@@ -12,6 +12,7 @@ import com.dsy.hangaituangou.service.ChatMessageService;
 import com.dsy.hangaituangou.service.ChatService;
 import com.dsy.hangaituangou.service.ConversationService;
 import com.dsy.hangaituangou.service.SysUserService;
+import com.dsy.hangaituangou.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -144,6 +146,32 @@ public class ChatServiceImpl implements ChatService {
                         .fileUrl(null)
                         .build())
                 .toList();
+
+    }
+
+    @Override
+    public List<MessageVO> historyByChatId(String chatId) {
+        String userId = Optional.ofNullable(SecurityUtils.getCurrentUserId())
+                .map(String::valueOf)
+                .orElseThrow(() -> new BusinessException("用户未登录"));
+        return chatMessageService.list(new LambdaQueryWrapper<ChatMessage>()
+                        .eq(ChatMessage::getConversationId, chatId)
+                        .orderByDesc(ChatMessage::getSendAt))
+                .stream()
+                .map(chatMessage -> MessageVO.builder()
+                        .id(chatMessage.getId().toString())
+                        .senderId(chatMessage.getSenderId())
+                        .senderName(sysUserService.getById(chatMessage.getSenderId()).getNickname())
+                        .text(chatMessage.getContent())
+                        .timestamp(chatMessage.getSendAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        .isMe(chatMessage.getSenderId().equals(userId))
+                        .avatarUrl(sysUserService.getById(chatMessage.getSenderId()).getAvatar())
+                        .isFile(false)
+                        .fileName(null)
+                        .fileUrl(null)
+                        .build())
+                .toList();
+
 
     }
 
