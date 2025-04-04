@@ -68,4 +68,14 @@ public class ChatController {
     public RespBase<List<MessageVO>> historyByChatId(@RequestParam String chatId) {
         return RespBase.success(chatService.historyByChatId(chatId));
     }
+
+//    @Operation(summary = "获取聊天媒体文件 图片", description = "获取聊天媒体文件 图片")
+//    @ApiResponses(value = {
+//            @ApiResponse(description = "获取聊天媒体文件 图片成功", responseCode = "200"),
+//            @ApiResponse(description = "获取聊天媒体文件 图片失败", responseCode = "400")}
+//    )
+//    @RequestMapping(value = "media", method = RequestMethod.GET)
+//    public RespBase<String> getChatMediaFile(@RequestParam String userId) {
+//        return RespBase.success(chatService.getChatMediaFile(userId));
+//    }
 }

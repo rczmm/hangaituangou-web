@@ -4,6 +4,7 @@ import com.dsy.hangaituangou.service.ChatService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ChatWebSocketHandler extends TextWebSocketHandler {
@@ -36,6 +38,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     }
 
     private String getUserIdFromSession(WebSocketSession session) {
+        log.info("getUserIdFromSession");
         return Objects.requireNonNull(session.getUri()).getQuery().split("=")[1].split("&")[0];
     }
 
@@ -88,7 +91,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                         session.sendMessage(new TextMessage("Recipient " + recipientId + " is not online."));
                     }
                 } else {
-                    session.sendMessage(new TextMessage("Recipient " + recipientId + " not found."));
+                    session.sendMessage(new TextMessage("{Recipient:" + recipientId + "}"));
                 }
             } else {
                 session.sendMessage(new TextMessage("Invalid message format or missing recipientId."));

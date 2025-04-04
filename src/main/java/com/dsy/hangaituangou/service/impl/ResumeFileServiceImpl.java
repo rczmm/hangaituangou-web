@@ -35,7 +35,9 @@ public class ResumeFileServiceImpl extends ServiceImpl<ResumeFileMapper, ResumeF
         // 校验文件类型
         String contentType = file.getContentType();
 
-        if (contentType == null || (!contentType.equals("application/pdf") && !contentType.equals("application/msword"))) {
+        if (contentType == null || (!contentType.equals("application/pdf") && !contentType.equals("application/msword")
+                && !contentType.equals("image/png")
+        )) {
             throw new IllegalArgumentException("不支持的文件类型: " + contentType);
         }
 
@@ -64,7 +66,6 @@ public class ResumeFileServiceImpl extends ServiceImpl<ResumeFileMapper, ResumeF
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
-                // Log the error
                 System.err.println("存储文件失败: " + e.getMessage());
                 throw new IOException("存储文件失败", e); // 重新抛出，触发事务回滚
             }

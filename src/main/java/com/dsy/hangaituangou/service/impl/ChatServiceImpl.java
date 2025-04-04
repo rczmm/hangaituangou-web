@@ -155,8 +155,7 @@ public class ChatServiceImpl implements ChatService {
                 .map(String::valueOf)
                 .orElseThrow(() -> new BusinessException("用户未登录"));
         return chatMessageService.list(new LambdaQueryWrapper<ChatMessage>()
-                        .eq(ChatMessage::getConversationId, chatId)
-                        .orderByDesc(ChatMessage::getSendAt))
+                        .eq(ChatMessage::getConversationId, chatId))
                 .stream()
                 .map(chatMessage -> MessageVO.builder()
                         .id(chatMessage.getId().toString())

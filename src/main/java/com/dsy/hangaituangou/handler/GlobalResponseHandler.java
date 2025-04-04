@@ -59,9 +59,9 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
         String errorMessage = fieldErrors.stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
+        log.error("参数校验失败：{}", errorMessage);
         return RespBase.fail(400, errorMessage);
     }
-
 
 
     @Override
@@ -82,7 +82,6 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
                 return RespBase.fail("返回String类型数据转换json异常");
             }
         }
-
 
 
         // 封装返回结果
