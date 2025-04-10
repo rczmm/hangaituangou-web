@@ -83,7 +83,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                         // 构造要发送给收件人的消息
                         String messageToSend = objectMapper.writeValueAsString(Map.of(
                                 "senderId", senderId,
-                                "text", text + "回复"
+                                "text", text
                         ));
                         recipientSession.sendMessage(new TextMessage(messageToSend));
                         session.sendMessage(new TextMessage("Message sent to " + recipientId));
