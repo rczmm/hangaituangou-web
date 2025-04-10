@@ -2,6 +2,7 @@ package com.dsy.hangaituangou.controller;
 
 import com.dsy.hangaituangou.domain.UserResume;
 import com.dsy.hangaituangou.domain.bo.UserResumeBO;
+import com.dsy.hangaituangou.domain.vo.UserResumeVO;
 import com.dsy.hangaituangou.domain.vo.base.RespBase;
 import com.dsy.hangaituangou.service.UserResumeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,11 +33,7 @@ public class UserResumeController {
     @PostMapping("/save")
     public RespBase<UserResume> saveResume(@RequestBody UserResumeBO resumeBO) {
         UserResume resume;
-        if (resumeBO.getId() != null) {
-            resume = userResumeService.updateResume(resumeBO.getId(), resumeBO);
-        } else {
-            resume = userResumeService.createResume(resumeBO);
-        }
+        resume = userResumeService.updateResume(resumeBO.getId(), resumeBO);
         return RespBase.success(resume);
     }
 
@@ -53,8 +50,8 @@ public class UserResumeController {
     }
 
     @GetMapping("/user")
-    public RespBase<List<UserResume>> getResumesByUserId(@RequestParam Long userId) {
-        List<UserResume> resumes = userResumeService.getResumesByUserId(userId);
-        return RespBase.success(resumes);
+    public RespBase<List<UserResumeVO>> getResumesByUserId(@RequestParam Long userId) {
+        List<UserResumeVO> profiles = userResumeService.getResumesByUserId(userId);
+        return RespBase.success(profiles);
     }
 }
