@@ -36,7 +36,7 @@ public class ResumeFileServiceImpl extends ServiceImpl<ResumeFileMapper, ResumeF
         String contentType = file.getContentType();
 
         if (contentType == null || (!contentType.equals("application/pdf") && !contentType.equals("application/msword")
-                && !contentType.equals("image/png")
+                && !contentType.equals("image/png") && !contentType.equals("image/jpeg") && !contentType.equals("application/octet-stream")
         )) {
             throw new IllegalArgumentException("不支持的文件类型: " + contentType);
         }
