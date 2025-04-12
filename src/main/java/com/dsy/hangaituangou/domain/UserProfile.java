@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class UserProfile extends BaseEntity {
 
-    private String userId;
+    private Long userId;
     private String exJob;
     private String exSalary;
     private String exMinSalary;

@@ -71,7 +71,7 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
         List<UserProfileVO> userProfileVOS = profilePage.getRecords().stream().map(userProfile1 -> {
             List<String> skillList = gson.fromJson(userProfile1.getSpecialty(), new TypeToken<List<String>>() {
             }.getType());
-            return UserProfileVO.builder().id(userProfile1.getId()).name(userProfile1.getName()).title(userProfile1.getExJob()).skills(skillList).location(userProfile1.getCity()).experience(userProfile1.getWorkExperience()).avatar("").introduction(userProfile1.getPersonIntroduction()).expectedSalary(userProfile1.getExSalary()).isHovered("true").isBlurred("true").category(userProfile1.getSpecialty()).build();
+            return UserProfileVO.builder().id(userProfile1.getUserId()).name(userProfile1.getName()).title(userProfile1.getExJob()).skills(skillList).location(userProfile1.getCity()).experience(userProfile1.getWorkExperience()).avatar("").introduction(userProfile1.getPersonIntroduction()).expectedSalary(userProfile1.getExSalary()).isHovered("true").isBlurred("true").category(userProfile1.getSpecialty()).build();
         }).toList();
 
         userProfileVOPage.setRecords(userProfileVOS);
