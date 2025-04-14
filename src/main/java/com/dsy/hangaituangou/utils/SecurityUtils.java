@@ -2,13 +2,17 @@ package com.dsy.hangaituangou.utils;
 
 import com.dsy.hangaituangou.domain.SysUser;
 import com.dsy.hangaituangou.domain.security.Customer;
+import com.dsy.hangaituangou.service.SysUserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 /**
  * 安全工具类，用于获取当前登录用户信息
  */
 public class SecurityUtils {
+
 
     /**
      * 获取当前登录用户

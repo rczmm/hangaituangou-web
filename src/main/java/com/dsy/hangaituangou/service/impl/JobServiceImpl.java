@@ -3,14 +3,19 @@ package com.dsy.hangaituangou.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dsy.hangaituangou.domain.Company;
 import com.dsy.hangaituangou.domain.Job;
+import com.dsy.hangaituangou.domain.SysUser;
 import com.dsy.hangaituangou.domain.bo.JobAddBO;
 import com.dsy.hangaituangou.domain.bo.JobBO;
 import com.dsy.hangaituangou.domain.vo.JobVO;
 import com.dsy.hangaituangou.enums.JobStatusEnum;
 import com.dsy.hangaituangou.exception.base.BusinessException;
+import com.dsy.hangaituangou.mapper.CompanyMapper;
 import com.dsy.hangaituangou.mapper.JobMapper;
 import com.dsy.hangaituangou.service.JobService;
+import com.dsy.hangaituangou.service.SysUserService;
+import com.dsy.hangaituangou.utils.SecurityUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
- /**
+/**
  * 岗位服务实现类
  */
 @Service
@@ -31,15 +36,19 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 
     private final Gson gson;
 
+    private final SysUserService sysUserService;
+
+    private final CompanyMapper  companyMapper;
+
     @Override
     public Page<JobVO> listByParams(JobBO jobBO) {
+
+        SysUser currentUser = sysUserService.getById(SecurityUtils.getCurrentUserId());
 
         Page<Job> jobPage = page(new Page<>(jobBO.getPageNum(), jobBO.getPageSize()),
                 new LambdaQueryWrapper<Job>()
                         .like(Objects.nonNull(jobBO.getType()), Job::getTags, jobBO.getType())
-                        .and(Objects.nonNull(jobBO.getKeyword()) && !jobBO.getKeyword().isEmpty(), o -> o.like(Objects.nonNull(jobBO.getKeyword()),
-                                        Job::getTitle,
-                                        jobBO.getKeyword())
+                        .and(Objects.nonNull(jobBO.getKeyword()) && !jobBO.getKeyword().isEmpty(), o -> o.like(Objects.nonNull(jobBO.getKeyword()), Job::getTitle, jobBO.getKeyword())
                                 .or()
                                 .like(Objects.nonNull(jobBO.getKeyword()), Job::getCompany, jobBO.getKeyword())
                                 .or()
@@ -49,6 +58,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
                         .eq(Objects.nonNull(jobBO.getMinSalary()), Job::getMinSalary, jobBO.getMinSalary())
                         .eq(Objects.nonNull(jobBO.getMaxSalary()), Job::getMaxSalary, jobBO.getMaxSalary())
                         .eq(Objects.nonNull(jobBO.getCategory()), Job::getCategory, jobBO.getCategory())
+                        .eq(currentUser.getUserType().equals(0), Job::getHrUserId, SecurityUtils.getCurrentUserId())
                         .orderByDesc(Job::getCreateTime)
         );
 
@@ -110,30 +120,40 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
         return res;
     }
 
-     @Override
-     public Boolean add(JobAddBO jobAddBO) {
-         return save(Job.builder()
-                 .title(jobAddBO.getTitle())
-                 .minSalary(jobAddBO.getMinSalary())
-                 .maxSalary(jobAddBO.getMaxSalary())
-                 .salary(jobAddBO.getSalary())
-                 .tags(gson.toJson(jobAddBO.getTags()))
-                 .hrUserId(jobAddBO.getHrUserId())
-                 .location(jobAddBO.getLocation())
-                 .workExperience(jobAddBO.getWorkExperience())
-                 .education(jobAddBO.getEducation())
-                 .benefits(gson.toJson(jobAddBO.getBenefits()))
-                 .description(jobAddBO.getDescription())
-                 .requirements(gson.toJson(jobAddBO.getRequirements()))
-                 .date(jobAddBO.getDate())
-                 .status(JobStatusEnum.OPEN)
-                 .count(jobAddBO.getCount())
-                 .build()
-         );
-     }
+    @Override
+    public Boolean add(JobAddBO jobAddBO) {
 
-     @Override
-     public Boolean edit(JobAddBO jobAddBO) {
+        SysUser currentUser = sysUserService.getById(SecurityUtils.getCurrentUserId());
+
+        Company currentCompany = companyMapper.selectById(currentUser.getCompanyId());
+
+        return save(Job.builder()
+                .title(jobAddBO.getTitle())
+                .minSalary(jobAddBO.getMinSalary())
+                .maxSalary(jobAddBO.getMaxSalary())
+                .salary(jobAddBO.getSalary())
+                .tags(gson.toJson(jobAddBO.getTags()))
+                .hrUserId(currentUser.getId().toString())
+                .location(jobAddBO.getLocation())
+                .workExperience(jobAddBO.getWorkExperience())
+                .education(jobAddBO.getEducation())
+                .benefits(gson.toJson(jobAddBO.getBenefits()))
+                .description(jobAddBO.getDescription())
+                .requirements(gson.toJson(jobAddBO.getRequirements()))
+                .date(jobAddBO.getDate())
+                .status(JobStatusEnum.OPEN)
+                .company(currentCompany.getName())
+                .companySize(currentCompany.getScale())
+                .companyLogo(currentCompany.getLogoUrl())
+                .hrName(currentUser.getUsername())
+                .category(jobAddBO.getCategory())
+                .count(jobAddBO.getCount())
+                .build()
+        );
+    }
+
+    @Override
+    public Boolean edit(JobAddBO jobAddBO) {
 
         Job job = getById(jobAddBO.getId());
         if (job == null) {
@@ -154,5 +174,5 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
         job.setCategory(jobAddBO.getCategory());
         job.setCount(jobAddBO.getCount());
         return updateById(job);
-     }
- }
+    }
+}

@@ -54,6 +54,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         Customer customer = (Customer) authentication.getPrincipal();
         SysUser sysUser = customer.getSysUser();
 
+        if (!sysUser.getUserType().equals(loginBo.getUserType())) {
+            throw new BusinessException("用户类型不匹配");
+        }
+
         // 构建LoginVo对象
         LoginVo loginVo = new LoginVo();
         loginVo.setUserId(sysUser.getId());
@@ -139,9 +143,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public List<Map<String, Object>> getCompanyList() {
         List<Company> companyList = companyMapper.selectList(null);
-        return companyList.stream().map(company -> Map.<String, Object>of(
-                "companyId", company.getId(),
-                "companyName", company.getName()
-        )).toList();
+        return companyList.stream().map(company -> Map.<String, Object>of("companyId", company.getId(), "companyName", company.getName())).toList();
     }
 }
