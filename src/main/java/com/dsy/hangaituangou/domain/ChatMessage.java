@@ -1,6 +1,8 @@
 package com.dsy.hangaituangou.domain;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.dsy.hangaituangou.domain.base.BaseEntity;
+import com.dsy.hangaituangou.enums.MessageTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +24,8 @@ public class ChatMessage extends BaseEntity {
 
     private String recipientId;
 
-    private String messageType;
+    @EnumValue
+    private MessageTypeEnum messageType;
 
     private String content;
 

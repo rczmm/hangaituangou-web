@@ -3,16 +3,18 @@ package com.dsy.hangaituangou.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dsy.hangaituangou.domain.ChatMessage;
 import com.dsy.hangaituangou.domain.Conversations;
+import com.dsy.hangaituangou.domain.Interview;
 import com.dsy.hangaituangou.domain.SysUser;
 import com.dsy.hangaituangou.domain.bo.ChatBO;
 import com.dsy.hangaituangou.domain.vo.ChatVO;
 import com.dsy.hangaituangou.domain.vo.MessageVO;
+import com.dsy.hangaituangou.enums.InterviewStatusEnum;
+import com.dsy.hangaituangou.enums.MessageTypeEnum;
 import com.dsy.hangaituangou.exception.base.BusinessException;
-import com.dsy.hangaituangou.service.ChatMessageService;
-import com.dsy.hangaituangou.service.ChatService;
-import com.dsy.hangaituangou.service.ConversationService;
-import com.dsy.hangaituangou.service.SysUserService;
+import com.dsy.hangaituangou.service.*;
 import com.dsy.hangaituangou.utils.SecurityUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
@@ -21,7 +23,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -33,6 +35,10 @@ public class ChatServiceImpl implements ChatService {
     private final SysUserService sysUserService;
 
     private final ChatMessageService chatMessageService;
+
+    private final InterviewService interviewService;
+
+    private final Gson gson = new Gson();
 
 
     @Override
@@ -110,7 +116,7 @@ public class ChatServiceImpl implements ChatService {
                 .conversationId(conversations.getId().toString())
                 .senderId(senderId)
                 .recipientId(recipientId)
-                .messageType("text")
+                .messageType(text.startsWith("{") ? MessageTypeEnum.INTERVIEW_INVITATION : MessageTypeEnum.TEXT)
                 .content(text)
                 .status("sent")
                 .sendAt(LocalDateTime.now())
@@ -118,6 +124,30 @@ public class ChatServiceImpl implements ChatService {
         if (chatMessageService.save(chatMessage)) {
             conversations.setLastMessage(text);
             conversations.setLastMessageAt(chatMessage.getSendAt());
+
+            if (chatMessage.getMessageType().equals(MessageTypeEnum.INTERVIEW_INVITATION)) {
+                conversations.setLastMessage(MessageTypeEnum.INTERVIEW_INVITATION.getDescription());
+                Map<String, String> fromJson = gson.fromJson(text, new TypeToken<Map<String, String>>() {
+                }.getType());
+                Interview interview = new Interview();
+                interview.setUserId(recipientId);
+                interview.setType(fromJson.get("type"));
+                interview.setDurationTime(fromJson.get("duration"));
+                interview.setLocation(fromJson.get("location"));
+                interview.setHrNotes(fromJson.get("notes"));
+                interview.setScheduledTime(fromJson.get("datetime"));
+                interview.setJobName(fromJson.get("position"));
+                interview.setInterviewLink(fromJson.get("meetingLink"));
+                interview.setStatus(InterviewStatusEnum.PENDING_RECEIPT);
+                interview.setInterviewInfo(fromJson.get("interviewer"));
+                interview.setDirection(fromJson.get("direction"));
+                interviewService.save(interview);
+
+                fromJson.put("id", interview.getId().toString());
+                chatMessage.setContent(gson.toJson(fromJson));
+                chatMessageService.updateById(chatMessage);
+            }
+
             return conversationService.updateById(conversations);
         }
         return false;
@@ -143,6 +173,7 @@ public class ChatServiceImpl implements ChatService {
                         .avatarUrl(sysUserService.getById(chatMessage.getSenderId()).getAvatar())
                         .isFile(false)
                         .fileName(null)
+                        .type(chatMessage.getMessageType().name())
                         .fileUrl(null)
                         .build())
                 .toList();

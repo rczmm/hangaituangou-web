@@ -46,7 +46,7 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
 
             return UserProfileAppVO.builder()
                     .id(String.valueOf(userProfile.getId()))
-                    .userId(userProfile.getUserId())
+                    .userId(String.valueOf(userProfile.getUserId()))
                     .exJob(userProfile.getExJob())
                     .exMinSalary(userProfile.getExMinSalary())
                     .exMaxSalary(userProfile.getExMaxSalary())
@@ -126,7 +126,7 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
                 .city(userProfileAppBO.getCity())
                 .build();
 
-        if (Objects.nonNull(userProfileAppBO.getId())){
+        if (Objects.nonNull(userProfileAppBO.getId()) && !userProfileAppBO.getId().isEmpty()){
             userProfile.setId(Long.valueOf(userProfileAppBO.getId()));
         }
 

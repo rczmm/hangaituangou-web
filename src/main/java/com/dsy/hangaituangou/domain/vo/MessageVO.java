@@ -23,5 +23,6 @@ public class MessageVO {
     private boolean isFile;
     private String fileName;
     private String fileUrl;
+    private String type;
 
 }

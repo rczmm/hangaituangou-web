@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class UserProfileAppVO {
     private String id;
-    private Long userId;
+    private String userId;
     private String exJob;
     private String exMinSalary;
     private String exMaxSalary;
