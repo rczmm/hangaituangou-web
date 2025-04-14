@@ -145,7 +145,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
                 .company(currentCompany.getName())
                 .companySize(currentCompany.getScale())
                 .companyLogo(currentCompany.getLogoUrl())
-                .hrName(currentUser.getUsername())
+                .hrName(currentUser.getNickname())
                 .category(jobAddBO.getCategory())
                 .count(jobAddBO.getCount())
                 .build()

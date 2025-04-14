@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dsy.hangaituangou.domain.UserProfile;
+import com.dsy.hangaituangou.domain.bo.UserProfileAppBO;
 import com.dsy.hangaituangou.domain.bo.UserProfileBO;
+import com.dsy.hangaituangou.domain.vo.UserProfileAppVO;
 import com.dsy.hangaituangou.domain.vo.UserProfileVO;
 import com.dsy.hangaituangou.mapper.UserProfileMapper;
 import com.dsy.hangaituangou.service.UserProfileService;
@@ -34,8 +36,30 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
      * @return 用户档案
      */
     @Override
-    public UserProfile selectUserProfileById(String id) {
-        return userProfileMapper.selectUserProfileById(id);
+    public UserProfileAppVO selectUserProfileById(String id) {
+
+        UserProfile userProfile = list(new LambdaQueryWrapper<UserProfile>().eq(UserProfile::getUserId, id)).stream().findFirst().orElse(new UserProfile());
+
+        if (Objects.nonNull(userProfile.getUserId())) {
+            List<String> specialty = gson.fromJson(userProfile.getSpecialty(), new TypeToken<List<String>>() {
+            }.getType());
+
+            return UserProfileAppVO.builder()
+                    .id(String.valueOf(userProfile.getId()))
+                    .userId(userProfile.getUserId())
+                    .exJob(userProfile.getExJob())
+                    .exMinSalary(userProfile.getExMinSalary())
+                    .exMaxSalary(userProfile.getExMaxSalary())
+                    .personIntroduction(userProfile.getPersonIntroduction())
+                    .workExperience(userProfile.getWorkExperience())
+                    .name(userProfile.getName())
+                    .specialty(specialty)
+                    .city(userProfile.getCity())
+                    .build();
+        } else {
+            return null;
+        }
+
     }
 
     /**
@@ -84,24 +108,31 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
     /**
      * 新增用户档案
      *
-     * @param userProfile 用户档案
+     * @param userProfileAppBO 用户档案
      * @return 结果
      */
     @Override
-    public int insertUserProfile(UserProfile userProfile) {
-        return userProfileMapper.insertUserProfile(userProfile);
+    public boolean insertUserProfile(UserProfileAppBO userProfileAppBO) {
+        UserProfile userProfile = UserProfile.builder()
+                .userId(Long.valueOf(userProfileAppBO.getUserId()))
+                .name(userProfileAppBO.getName())
+                .exJob(userProfileAppBO.getExJob())
+                .exMinSalary(userProfileAppBO.getExMinSalary())
+                .exMaxSalary(userProfileAppBO.getExMaxSalary())
+                .exSalary(userProfileAppBO.getExMinSalary() + "-" + userProfileAppBO.getExMaxSalary())
+                .personIntroduction(userProfileAppBO.getPersonIntroduction())
+                .workExperience(userProfileAppBO.getWorkExperience())
+                .specialty(gson.toJson(userProfileAppBO.getSpecialty()))
+                .city(userProfileAppBO.getCity())
+                .build();
+
+        if (Objects.nonNull(userProfileAppBO.getId())){
+            userProfile.setId(Long.valueOf(userProfileAppBO.getId()));
+        }
+
+        return userProfileMapper.insertOrUpdate(userProfile);
     }
 
-    /**
-     * 修改用户档案
-     *
-     * @param userProfile 用户档案
-     * @return 结果
-     */
-    @Override
-    public int updateUserProfile(UserProfile userProfile) {
-        return userProfileMapper.updateUserProfile(userProfile);
-    }
 
     /**
      * 删除用户档案对象

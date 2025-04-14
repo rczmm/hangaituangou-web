@@ -3,7 +3,9 @@ package com.dsy.hangaituangou.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dsy.hangaituangou.domain.UserProfile;
+import com.dsy.hangaituangou.domain.bo.UserProfileAppBO;
 import com.dsy.hangaituangou.domain.bo.UserProfileBO;
+import com.dsy.hangaituangou.domain.vo.UserProfileAppVO;
 import com.dsy.hangaituangou.domain.vo.UserProfileVO;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public interface UserProfileService extends IService<UserProfile> {
      * @param id ID
      * @return 用户档案
      */
-    UserProfile selectUserProfileById(String id);
+    UserProfileAppVO selectUserProfileById(String id);
 
     /**
      * 根据用户ID查询用户档案
@@ -40,18 +42,11 @@ public interface UserProfileService extends IService<UserProfile> {
     /**
      * 新增用户档案
      *
-     * @param userProfile 用户档案
+     * @param userProfileAppBO 用户档案
      * @return 结果
      */
-    int insertUserProfile(UserProfile userProfile);
+    boolean insertUserProfile(UserProfileAppBO userProfileAppBO);
 
-    /**
-     * 修改用户档案
-     *
-     * @param userProfile 用户档案
-     * @return 结果
-     */
-    int updateUserProfile(UserProfile userProfile);
 
     /**
      * 批量删除用户档案

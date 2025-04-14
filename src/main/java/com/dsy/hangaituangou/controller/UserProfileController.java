@@ -2,7 +2,9 @@ package com.dsy.hangaituangou.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dsy.hangaituangou.domain.UserProfile;
+import com.dsy.hangaituangou.domain.bo.UserProfileAppBO;
 import com.dsy.hangaituangou.domain.bo.UserProfileBO;
+import com.dsy.hangaituangou.domain.vo.UserProfileAppVO;
 import com.dsy.hangaituangou.domain.vo.UserProfileVO;
 import com.dsy.hangaituangou.domain.vo.base.RespBase;
 import com.dsy.hangaituangou.service.UserProfileService;
@@ -25,8 +27,8 @@ public class UserProfileController {
     private final UserProfileService userProfileService;
 
     @Operation(summary = "获取用户档案详细信息", description = "根据ID获取用户档案详细信息")
-    @GetMapping(value = "/{id}")
-    public RespBase<UserProfile> getInfo(@PathVariable("id") String id) {
+    @GetMapping
+    public RespBase<UserProfileAppVO> getInfo(@RequestParam("id") String id) {
         return RespBase.success(userProfileService.selectUserProfileById(id));
     }
 
@@ -39,14 +41,8 @@ public class UserProfileController {
 
     @Operation(summary = "新增用户档案", description = "新增用户档案")
     @PostMapping
-    public RespBase<Integer> add(@RequestBody UserProfile userProfile) {
-        return RespBase.success(userProfileService.insertUserProfile(userProfile));
-    }
-
-    @Operation(summary = "修改用户档案", description = "修改用户档案")
-    @PutMapping
-    public RespBase<Integer> edit(@RequestBody UserProfile userProfile) {
-        return RespBase.success(userProfileService.updateUserProfile(userProfile));
+    public RespBase<Boolean> add(@RequestBody UserProfileAppBO userProfileAppBO) {
+        return RespBase.success(userProfileService.insertUserProfile(userProfileAppBO));
     }
 
     @Operation(summary = "删除用户档案", description = "删除用户档案")

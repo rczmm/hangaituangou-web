@@ -1,24 +1,25 @@
-package com.dsy.hangaituangou.domain;
+package com.dsy.hangaituangou.domain.vo;
 
-import com.dsy.hangaituangou.domain.base.BaseEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@EqualsAndHashCode(callSuper = true)
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserProfile extends BaseEntity {
-
+public class UserProfileAppVO {
+    private String id;
     private Long userId;
     private String exJob;
-    private String exSalary;
     private String exMinSalary;
     private String exMaxSalary;
     private String personIntroduction;
     private String workExperience;
     private String name;
-    private String specialty;
+    private List<String> specialty;
     private String city;
-
 }
