@@ -122,11 +122,8 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 
     @Override
     public Boolean add(JobAddBO jobAddBO) {
-
         SysUser currentUser = sysUserService.getById(SecurityUtils.getCurrentUserId());
-
         Company currentCompany = companyMapper.selectById(currentUser.getCompanyId());
-
         return save(Job.builder()
                 .title(jobAddBO.getTitle())
                 .minSalary(jobAddBO.getMinSalary())
