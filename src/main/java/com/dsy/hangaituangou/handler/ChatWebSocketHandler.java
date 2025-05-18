@@ -66,8 +66,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
-        System.out.println("Received message from client " + session.getId() + ": " + payload);
-
         try {
             JsonNode jsonNode = objectMapper.readTree(payload);
             String recipientId = jsonNode.get("recipientId").asText();
